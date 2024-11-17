@@ -1,38 +1,21 @@
-function generateGrid() {
-    const cohorts = {
-        "L1": parseInt(document.getElementById("L1").value) || 0,
-        "L2": parseInt(document.getElementById("L2").value) || 0,
-        "L3": parseInt(document.getElementById("L3").value) || 0,
-        "L4": parseInt(document.getElementById("L4").value) || 0,
-        "L5": parseInt(document.getElementById("L5").value) || 0,
-        "L6": parseInt(document.getElementById("L6").value) || 0,
-        "CC": parseInt(document.getElementById("CC").value) || 0,
-        "PPP": parseInt(document.getElementById("PPP").value) || 0,
-    };
+// Password Protection
+function checkPassword() {
+  const correctPassword = "QBADefile";
+  const enteredPassword = document.getElementById("password").value;
 
-    const columns = 8;
-    const totalPeople = Object.values(cohorts).reduce((sum, value) => sum + value, 0);
-    const rows = Math.ceil(totalPeople / columns);
-
-    let gridHTML = '';
-    let peopleLeft = { ...cohorts };
-
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < columns; j++) {
-            const cell = getNextCohort(peopleLeft);
-            gridHTML += `<div class="cell">${cell || "EMPTY"}</div>`;
-        }
-    }
-
-    document.getElementById("grid").innerHTML = gridHTML;
+  if (enteredPassword === correctPassword) {
+    document.getElementById("password-prompt").style.display = "none"; // Hide the password prompt
+    document.getElementById("main-content").style.display = "block"; // Show main content
+    initializeGrid(); // Initialize grid formation after successful login
+  } else {
+    document.getElementById("error-message").style.display = "block"; // Show error message
+  }
 }
 
-function getNextCohort(peopleLeft) {
-    for (const [cohort, count] of Object.entries(peopleLeft)) {
-        if (count > 0) {
-            peopleLeft[cohort]--;
-            return cohort;
-        }
-    }
-    return null; // No more people left to place
+// Grid Formation Logic (Move your grid logic into a function for modularity)
+function initializeGrid() {
+  // Add your grid generation logic here.
+  // For example:
+  const gridOutput = document.getElementById("grid-output");
+  gridOutput.innerHTML = "<p>Your generated grid will appear here.</p>";
 }
