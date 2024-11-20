@@ -1,68 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>Grid Formation</title>
-</head>
-<body>
-  <!-- Password Protection Prompt -->
-  <div id="password-prompt">
-    <h2>Enter Password to Access</h2>
-    <input type="password" id="password" placeholder="Enter password">
-    <button onclick="checkPassword()">Submit</button>
-    <p id="error-message" style="color: red; display: none;">Incorrect password. Try again!</p>
+<!-- Cohort Input Section -->
+<div id="cohort-inputs" style="margin-bottom: 20px;">
+  <h3>Enter Cohort Populations</h3>
+  <div class="input-group">
+    <label for="PPP">PPP Population:</label>
+    <input type="number" id="PPP" min="0" placeholder="Enter PPP count">
   </div>
-
-  <!-- Main Content (Hidden Initially) -->
-  <div id="main-content" style="display: none;">
-    <h1>Grid Formation</h1>
-
-    <!-- Input Section for Cohort Populations -->
-    <div id="cohort-inputs" style="margin-bottom: 20px;">
-      <h3>Enter Cohort Populations</h3>
-      <div class="input-group">
-        <label for="L1">L1 Population:</label>
-        <input type="number" id="L1" min="0" placeholder="Enter L1 count">
-      </div>
-      <div class="input-group">
-        <label for="L2">L2 Population:</label>
-        <input type="number" id="L2" min="0" placeholder="Enter L2 count">
-      </div>
-      <div class="input-group">
-        <label for="L3">L3 Population:</label>
-        <input type="number" id="L3" min="0" placeholder="Enter L3 count">
-      </div>
-      <div class="input-group">
-        <label for="L4">L4 Population:</label>
-        <input type="number" id="L4" min="0" placeholder="Enter L4 count">
-      </div>
-      <div class="input-group">
-        <label for="L5">L5 Population:</label>
-        <input type="number" id="L5" min="0" placeholder="Enter L5 count">
-      </div>
-      <div class="input-group">
-        <label for="L6">L6 Population:</label>
-        <input type="number" id="L6" min="0" placeholder="Enter L6 count">
-      </div>
-      <div class="input-group">
-        <label for="CC">CC Population:</label>
-        <input type="number" id="CC" min="0" placeholder="Enter CC count">
-      </div>
-      <div class="input-group">
-        <label for="PPP">PPP Population:</label>
-        <input type="number" id="PPP" min="0" placeholder="Enter PPP count">
-      </div>
-      <button onclick="generateGrid()">Generate Grid</button>
-    </div>
-
-    <!-- Grid Output -->
-    <div id="grid-output">
-      <!-- The grid generation script will populate this section -->
-    </div>
+  <div class="input-group">
+    <label for="L1">L1 Population:</label>
+    <input type="number" id="L1" min="0" placeholder="Enter L1 count">
   </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+  <div class="input-group">
+    <label for="CC">CC Population:</label>
+    <input type="number" id="CC" min="0" placeholder="Enter CC count">
+  </div>
+  <div class="input-group">
+    <label for="L2">L2 Population:</label>
+    <input type="number" id="L2" min="0" placeholder="Enter L2 count">
+  </div>
+  <div class="input-group">
+    <label for="L3">L3 Population:</label>
+    <input type="number" id="L3" min="0" placeholder="Enter L3 count">
+  </div>
+  <div class="input-group">
+    <label for="L4">L4 Population:</label>
+    <input type="number" id="L4" min="0" placeholder="Enter L4 count">
+  </div>
+  <div class="input-group">
+    <label for="L5">L5 Population:</label>
+    <input type="number" id="L5" min="0" placeholder="Enter L5 count">
+  </div>
+  <div class="input-group">
+    <label for="L6">L6 Population:</label>
+    <input type="number" id="L6" min="0" placeholder="Enter L6 count">
+  </div>
+  <button onclick="generateGrid()">Generate Grid</button>
+</div>
