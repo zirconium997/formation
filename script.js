@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // Password protection
+    const correctPassword = "DefileFormation";  // Set your password here
+    const enteredPassword = prompt("Enter the password to access the site:");
+
+    if (enteredPassword !== correctPassword) {
+        alert("Incorrect password.");
+        return;
+    }
+
+    // Show the content if the password is correct
+    document.getElementById("content").style.display = "block";
+
+    // Cohorts and grid generation
     const cohorts = {
         "L1": 13,
         "L2": 10,
