@@ -1,24 +1,72 @@
-#grid-container {
-    display: grid;
-    gap: 10px;
+body {
+    font-family: Calibri, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+}
+
+#input-section {
+    display: flex;
     justify-content: center;
+    margin-bottom: 30px;
+}
+
+.input-table {
+    margin: auto;
+    text-align: left;
+    border-spacing: 15px;
+}
+
+#grid-table {
     margin: 20px auto;
+    border-collapse: collapse;
+    text-align: center;
 }
 
-.grid-row {
-    display: grid;
-    grid-template-columns: repeat(8, 60px);
-    gap: 5px;
-}
-
-.grid-cell {
+#grid-table td, #grid-table th {
+    border: 1px solid #ccc;
+    padding: 10px;
     width: 60px;
     height: 40px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
     font-weight: bold;
+}
+
+#grid-table th {
+    background-color: #f0f0f0;
+}
+
+.PPP {
+    background-color: yellow;
+}
+
+.L1 {
+    background-color: lightblue;
+}
+
+.CC {
+    background-color: gray;
+}
+
+.L2 {
+    background-color: lightgreen;
+}
+
+.L3 {
+    background-color: orange;
+}
+
+.L4 {
+    background-color: darkorange;
+}
+
+.L5 {
+    background-color: green;
+}
+
+.L6 {
+    background-color: lightgray;
 }
