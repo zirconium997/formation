@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Password protection
-    const correctPassword = "DefileFormation";
+    const correctPassword = "DefileFormations";
     const enteredPassword = prompt("Enter the password to access the site:");
 
     if (enteredPassword !== correctPassword) {
@@ -27,13 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const rows = Math.ceil(totalPeople / columns);
 
         // Create a 2D array for the grid
-        let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
+        let grid = Array.from({ length: rows }, () => Array(columns).fill(null));
 
         // Function to fill the grid with a specific cohort
         const fillGrid = (label, count) => {
             for (let i = 0; i < grid.length; i++) {
                 for (let j = 0; j < grid[i].length; j++) {
-                    if (count > 0 && grid[i][j] === "EMPTY") {
+                    if (count > 0 && grid[i][j] === null) {
                         grid[i][j] = label;
                         count--;
                     }
@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let col = 0; col < columns; col++) {
             const headerCell = document.createElement("th");
             headerCell.textContent = `Line ${String.fromCharCode(65 + col)}`;
+            headerCell.style.fontWeight = "bold";
             headerRow.appendChild(headerCell);
         }
         gridTable.appendChild(headerRow);
@@ -75,13 +76,14 @@ document.addEventListener("DOMContentLoaded", function () {
             // Add row labels (Line numbers)
             const rowLabel = document.createElement("th");
             rowLabel.textContent = `Line ${rowIndex + 1}`;
+            rowLabel.style.fontWeight = "bold";
             tableRow.appendChild(rowLabel);
 
             // Add cells for each column
             row.forEach(cell => {
                 const tableCell = document.createElement("td");
-                tableCell.textContent = cell;
-                tableCell.classList.add(cell); // Add class for styling
+                tableCell.textContent = cell ? cell : ""; // Only add text if the cell is filled
+                tableCell.classList.add(cell ? cell : "EMPTY"); // Add class for styling
                 tableRow.appendChild(tableCell);
             });
 
