@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Password protection
-    const correctPassword = "DefileFormation";
+    const correctPassword = "yourPasswordHere";
     const enteredPassword = prompt("Enter the password to access the site:");
 
     if (enteredPassword !== correctPassword) {
@@ -29,21 +29,22 @@ document.addEventListener("DOMContentLoaded", function () {
         // Create a 2D array for the grid
         let grid = Array.from({ length: rows }, () => Array(columns).fill(null));
 
-        // Function to fill the grid with a specific cohort
+        // Function to fill the grid row by row
         const fillGrid = (label, count) => {
-            for (let i = 0; i < grid.length; i++) {
-                for (let j = 0; j < grid[i].length; j++) {
-                    if (count > 0 && grid[i][j] === null) {
+            let filled = 0;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < columns; j++) {
+                    if (grid[i][j] === null && filled < count) {
                         grid[i][j] = label;
-                        count--;
+                        filled++;
                     }
                 }
             }
-            return count;
+            return count - filled; // Return any remaining individuals to allocate
         };
 
-        // Fill the grid following the rules
-        cohorts.PPP = fillGrid("PPP", cohorts.PPP); // Top 3 rows, prioritize PPP
+        // Fill cohorts in the prescribed order
+        cohorts.PPP = fillGrid("PPP", cohorts.PPP); // Top rows first
         cohorts.L1 = fillGrid("L1", cohorts.L1);   // Row 4
         cohorts.L4 = fillGrid("L4", cohorts.L4);   // Rows 5-6
         cohorts.L5 = fillGrid("L5", cohorts.L5);   // Rows 7-8
@@ -82,8 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Add cells for each column
             row.forEach(cell => {
                 const tableCell = document.createElement("td");
-                tableCell.textContent = cell ? cell : ""; // Only add text if the cell is filled
-                tableCell.classList.add(cell ? cell : "EMPTY"); // Add class for styling
+                tableCell.textContent = cell || ""; // Display cohort label or leave empty
+                tableCell.classList.add(cell ? cell : "empty-slot"); // Add class for styling
                 tableRow.appendChild(tableCell);
             });
 
