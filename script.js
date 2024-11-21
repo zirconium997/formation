@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Password protection
-    const correctPassword = "DefileForm4tion";
+    const correctPassword = "DefileFormation";
     const enteredPassword = prompt("Enter the password to access the site:");
 
     if (enteredPassword !== correctPassword) {
@@ -69,4 +69,65 @@ document.addEventListener("DOMContentLoaded", function () {
         // Place CC
         const ccRow = pppStartRow - 1;
         let remainingCC = cohorts.CC;
-        for (let col = 0; col < colu
+        for (let col = 0; col < columns; col++) {
+            if (remainingCC > 0) {
+                grid[ccRow][col] = "CC";
+                remainingCC--;
+            }
+        }
+
+        // Place other cohorts
+        cohorts.L1 = placeCohort("L1", cohorts.L1, 3, 4, ccRow);
+        cohorts.L2 = placeCohort("L2", cohorts.L2, 2, 5, ccRow);
+        cohorts.L3 = placeCohort("L3", cohorts.L3, 1, 6, ccRow);
+        cohorts.L6 = placeCohort("L6", cohorts.L6, 0, 7, ccRow);
+
+        // Place L5 after L6
+        let remainingL5 = cohorts.L5;
+        for (let row = 0; row < ccRow; row++) {
+            if (remainingL5 <= 0) break;
+            if (grid[row][0] === "EMPTY") {
+                grid[row][0] = "L5";
+                remainingL5--;
+            }
+            if (remainingL5 > 0 && grid[row][7] === "EMPTY") {
+                grid[row][7] = "L5";
+                remainingL5--;
+            }
+        }
+
+        // Place L4 in remaining slots
+        let remainingL4 = cohorts.L4;
+        for (let row = 0; row < ccRow; row++) {
+            for (let col = 1; col < columns - 1; col++) {
+                if (remainingL4 <= 0) break;
+                if (grid[row][col] === "EMPTY") {
+                    grid[row][col] = "L4";
+                    remainingL4--;
+                }
+            }
+        }
+
+        // Render grid
+        const gridContainer = document.getElementById("grid-container");
+        grid.forEach(row => {
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("grid-row");
+            row.forEach(cell => {
+                const cellDiv = document.createElement("div");
+                cellDiv.classList.add("grid-cell");
+                cellDiv.textContent = cell;
+                rowDiv.appendChild(cellDiv);
+            });
+            gridContainer.appendChild(rowDiv);
+        });
+
+        // Display cohort counts
+        const cohortList = document.getElementById("cohort-list");
+        for (const cohort in cohorts) {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${cohort}: Initial = ${cohorts[cohort]}, Placed = ${grid.flat().filter(cell => cell === cohort).length}`;
+            cohortList.appendChild(listItem);
+        }
+    });
+});
