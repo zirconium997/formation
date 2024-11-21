@@ -22,17 +22,40 @@ document.addEventListener("DOMContentLoaded", function () {
             L6: parseInt(document.getElementById("L6").value) || 0,
         };
 
-        const columns = 8;
+        const columns = 8; // Fixed number of columns
         const totalPeople = Object.values(cohorts).reduce((sum, count) => sum + count, 0);
         const rows = Math.ceil(totalPeople / columns);
 
+        // Create a 2D array for the grid
         let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-        // Grid generation logic
-        // Place PPP, CC, and other cohorts according to rules...
+        // Function to fill the grid with a specific cohort
+        const fillGrid = (label, count) => {
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
+                    if (count > 0 && grid[i][j] === "EMPTY") {
+                        grid[i][j] = label;
+                        count--;
+                    }
+                }
+            }
+            return count;
+        };
 
-        grid = grid.reverse(); // Rotate the grid by 180°
+        // Fill the grid following the rules
+        cohorts.PPP = fillGrid("PPP", cohorts.PPP); // Top 3 rows, prioritize PPP
+        cohorts.L1 = fillGrid("L1", cohorts.L1);   // Row 4
+        cohorts.L4 = fillGrid("L4", cohorts.L4);   // Rows 5-6
+        cohorts.L5 = fillGrid("L5", cohorts.L5);   // Rows 7-8
+        cohorts.CC = fillGrid("CC", cohorts.CC);   // Center rows
+        cohorts.L2 = fillGrid("L2", cohorts.L2);   // Rows below CC
+        cohorts.L3 = fillGrid("L3", cohorts.L3);   // Rows below CC
+        cohorts.L6 = fillGrid("L6", cohorts.L6);   // Bottom rows
 
+        // Rotate the grid 180 degrees
+        grid = grid.reverse().map(row => row.reverse());
+
+        // Clear and regenerate the grid table
         const gridTable = document.getElementById("grid-table");
         gridTable.innerHTML = "";
 
@@ -48,16 +71,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // Populate grid rows
         grid.forEach((row, rowIndex) => {
             const tableRow = document.createElement("tr");
+
+            // Add row labels (Line numbers)
             const rowLabel = document.createElement("th");
             rowLabel.textContent = `Line ${rowIndex + 1}`;
             tableRow.appendChild(rowLabel);
 
+            // Add cells for each column
             row.forEach(cell => {
                 const tableCell = document.createElement("td");
                 tableCell.textContent = cell;
-                tableCell.classList.add(cell);
+                tableCell.classList.add(cell); // Add class for styling
                 tableRow.appendChild(tableCell);
             });
+
             gridTable.appendChild(tableRow);
         });
     });
