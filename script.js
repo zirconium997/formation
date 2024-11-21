@@ -108,6 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        // Rotate the grid by 180 degrees
+        grid = grid.reverse();
+
         // Render grid
         const gridContainer = document.getElementById("grid-container");
         grid.forEach(row => {
