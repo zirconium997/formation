@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Password protection
-    const correctPassword = "yourPasswordHere";
+    const correctPassword = "DefileFormation";
     const enteredPassword = prompt("Enter the password to access the site:");
 
     if (enteredPassword !== correctPassword) {
