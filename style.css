@@ -1,72 +1,50 @@
 body {
-    font-family: Calibri, sans-serif;
-    font-weight: bold;
-    font-size: 16px;
+    font-family: Arial, sans-serif;
     text-align: center;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
 }
 
-h1, h2 {
+h1 {
+    font-weight: bold;
     margin-bottom: 20px;
 }
 
-#input-section {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-
-.input-table {
-    margin: auto;
-    text-align: left;
-    border-spacing: 15px;
-}
-
-#grid-table {
-    margin: 20px auto;
+table {
     border-collapse: collapse;
-    text-align: center;
+    margin: 20px auto;
 }
 
-#grid-table td, #grid-table th {
-    border: 1px solid #ccc;
+td, th {
+    border: 1px solid black;
     padding: 10px;
-    width: 60px;
-    height: 40px;
+    text-align: center;
     font-weight: bold;
 }
 
-#grid-table th {
-    background-color: #f0f0f0;
+#cohort-inputs input {
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
 }
 
-.PPP {
-    background-color: yellow;
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.L1 {
-    background-color: lightblue;
+button:hover {
+    background-color: #45a049;
 }
 
-.CC {
-    background-color: gray;
+#grid-table {
+    margin-top: 30px;
+    border: 2px solid #000;
 }
 
-.L2 {
-    background-color: lightgreen;
-}
-
-.L3 {
-    background-color: orange;
-}
-
-.L4 {
-    background-color: darkorange;
-}
-
-.L5 {
-    background-color: green;
-}
-
-.L6 {
-    background-color: lightgray;
-}
