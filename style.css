@@ -11,6 +11,10 @@ h1 {
     margin-bottom: 20px;
 }
 
+.hidden {
+    display: none;
+}
+
 table {
     border-collapse: collapse;
     margin: 20px auto;
@@ -23,28 +27,53 @@ td, th {
     font-weight: bold;
 }
 
-#cohort-inputs input {
-    width: 50px;
-    text-align: center;
+#password-form {
+    margin-top: 50px;
+}
+
+#password-input {
+    width: 200px;
+    padding: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+#password-form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#password-form button:hover {
+    background-color: #45a049;
+}
+
+#error-message {
+    color: red;
     font-weight: bold;
 }
 
-button {
-    background-color: #4CAF50;
-    color: white;
+#cohort-inputs, #grid-container {
+    margin: 50px auto;
+}
+
+#generate-grid {
     padding: 10px 20px;
-    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #45a049;
+#generate-grid:hover {
+    background-color: #0056b3;
 }
 
 #grid-table {
     margin-top: 30px;
-    border: 2px solid #000;
+    border: 2px solid black;
 }
-
