@@ -6,63 +6,109 @@ document.getElementById("password-submit").addEventListener("click", () => {
   const inputPassword = document.getElementById("password-input").value;
   const errorMessage = document.getElementById("password-error");
 
-  // Check if entered password matches the correct password
   if (inputPassword === password) {
-    // Hide the password modal and show the main content
     document.getElementById("password-modal").style.display = "none";
     document.getElementById("main-content").style.display = "block";
+    generateGrid(); // Call the grid generation function after successful login
   } else {
-    // Show error message if password is incorrect
     errorMessage.style.display = "block";
   }
 });
 
-// Optional: Clear the error message when the user starts typing again
 document.getElementById("password-input").addEventListener("input", () => {
   document.getElementById("password-error").style.display = "none";
 });
 
+// Function to generate the grid
 function generateGrid() {
-  const ppp = parseInt(document.getElementById("ppp").value) || 0;
-  const l1 = parseInt(document.getElementById("l1").value) || 0;
-  const cc = parseInt(document.getElementById("cc").value) || 0;
-  const l2 = parseInt(document.getElementById("l2").value) || 0;
-  const l3 = parseInt(document.getElementById("l3").value) || 0;
-  const l4 = parseInt(document.getElementById("l4").value) || 0;
-  const l5 = parseInt(document.getElementById("l5").value) || 0;
-  const l6 = parseInt(document.getElementById("l6").value) || 0;
+  const container = document.getElementById("grid-container");
+  container.innerHTML = ""; // Clear any existing grid
 
-  const totalPopulation = ppp + l1 + cc + l2 + l3 + l4 + l5 + l6;
-  const rows = Math.ceil(totalPopulation / 8);
-  const grid = Array(rows * 8).fill("EMPTY");
+  // Define cohort sizes
+  const cohorts = {
+    PPP: 18, // Example sizes, adjust as needed
+    CC: 10,
+    L4: 12,
+    L5: 8,
+    L6: 6,
+    L3: 10,
+    L2: 8,
+    L1: 14,
+  };
 
-  let index = 0;
+  const totalPeople = Object.values(cohorts).reduce((sum, val) => sum + val, 0);
+  const columns = 8; // Always 8 columns
+  const rows = Math.ceil(totalPeople / columns); // Determine number of rows
 
-  function placeCohort(count, label, styleClass) {
-    for (let i = 0; i < count; i++) {
-      while (grid[index] !== "EMPTY") index++;
-      grid[index] = { label, styleClass };
+  // Add column labels (Line A to Line H)
+  const columnLabels = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  const headerRow = document.createElement("div");
+  headerRow.className = "grid-label-row";
+  columnLabels.forEach((label) => {
+    const labelCell = document.createElement("div");
+    labelCell.className = "grid-label";
+    labelCell.textContent = `Line ${label}`;
+    headerRow.appendChild(labelCell);
+  });
+  container.appendChild(headerRow);
+
+  // Generate the grid
+  let personIndex = 0;
+  for (let i = 0; i < rows; i++) {
+    const row = document.createElement("div");
+    row.className = "grid-row";
+
+    for (let j = 0; j < columns; j++) {
+      const cell = document.createElement("div");
+      cell.className = "grid-cell";
+
+      // Add individuals from cohorts based on rules
+      if (personIndex < totalPeople) {
+        // Fill cell based on cohorts logic
+        const cohort = determineCohort(cohorts, personIndex);
+        cell.textContent = cohort;
+        cell.style.backgroundColor = getColor(cohort);
+        personIndex++;
+      } else {
+        cell.textContent = "EMPTY";
+        cell.style.backgroundColor = "#f0f0f0";
+      }
+
+      row.appendChild(cell);
     }
+
+    // Add row labels (Line 1, Line 2, etc.)
+    const rowLabel = document.createElement("div");
+    rowLabel.className = "grid-label";
+    rowLabel.textContent = `Line ${i + 1}`;
+    row.appendChild(rowLabel);
+
+    container.appendChild(row);
   }
+}
 
-  // Label Rows and Columns
-  const gridHeader = document.getElementById("grid-header");
-  gridHeader.innerHTML = "";
-  const letters = "ABCDEFGH".split("");
-  letters.forEach(letter => {
-    const headerCell = document.createElement("div");
-    headerCell.className = "column-label";
-    headerCell.textContent = `Line ${letter}`;
-    gridHeader.appendChild(headerCell);
-  });
+// Function to determine cohort placement (simplified for demo)
+function determineCohort(cohorts, index) {
+  let cumulative = 0;
+  for (const [key, value] of Object.entries(cohorts)) {
+    cumulative += value;
+    if (index < cumulative) return key;
+  }
+  return "EMPTY";
+}
 
-  const gridBody = document.getElementById("grid-body");
-  gridBody.innerHTML = "";
-
-  grid.forEach((cell, idx) => {
-    const div = document.createElement("div");
-    div.className = `grid-cell ${cell.styleClass}`;
-    div.textContent = cell.label;
-    gridBody.appendChild(div);
-  });
+// Function to get color based on cohort
+function getColor(cohort) {
+  const colors = {
+    PPP: "#ffff99",
+    CC: "#99ccff",
+    L4: "#ffcc99",
+    L5: "#99cc99",
+    L6: "#cccccc",
+    L3: "#99cccc",
+    L2: "#ff9966",
+    L1: "#ccccff",
+    EMPTY: "#f0f0f0",
+  };
+  return colors[cohort] || "#ffffff";
 }
