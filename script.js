@@ -1,15 +1,29 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // Password protection
-    const correctPassword = "DefileFormation";
-    const enteredPassword = prompt("Enter the password to access the site:");
+document.addEventListener("DOMContentLoaded", () => {
+    const PASSWORD = "DefileFormations";
 
-    if (enteredPassword !== correctPassword) {
-        alert("Incorrect password.");
-        return;
-    }
+    const passwordScreen = document.getElementById("password-screen");
+    const passwordForm = document.getElementById("password-form");
+    const passwordInput = document.getElementById("password-input");
+    const errorMessage = document.getElementById("error-message");
 
-   document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("generate-grid").addEventListener("click", function () {
+    const cohortInputs = document.getElementById("cohort-inputs");
+    const gridContainer = document.getElementById("grid-container");
+    const generateGridButton = document.getElementById("generate-grid");
+    const gridTable = document.getElementById("grid-table");
+
+    // Handle password submission
+    passwordForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (passwordInput.value === PASSWORD) {
+            passwordScreen.classList.add("hidden");
+            cohortInputs.classList.remove("hidden");
+        } else {
+            errorMessage.classList.remove("hidden");
+        }
+    });
+
+    // Generate grid functionality
+    generateGridButton.addEventListener("click", () => {
         const cohorts = {
             PPP: parseInt(document.getElementById("PPP").value) || 0,
             L1: parseInt(document.getElementById("L1").value) || 0,
@@ -21,76 +35,66 @@ document.addEventListener("DOMContentLoaded", function () {
             L6: parseInt(document.getElementById("L6").value) || 0,
         };
 
-        const columns = 8;
         const totalPeople = Object.values(cohorts).reduce((sum, count) => sum + count, 0);
+        const columns = 8;
         const rows = Math.ceil(totalPeople / columns);
 
         let grid = Array.from({ length: rows }, () => Array(columns).fill(null));
+        let emptySlots = rows * columns - totalPeople;
 
-        const placeCohort = (label, count, rules) => {
+        const placeCohorts = (label, count, colStart, colEnd) => {
             let remaining = count;
-            rules.forEach(({ rowRange, columns: colIndices }) => {
-                for (let row = rowRange.start; row <= rowRange.end && remaining > 0; row++) {
-                    colIndices.forEach(col => {
-                        if (remaining > 0 && grid[row][col] === null) {
-                            grid[row][col] = label;
-                            remaining--;
-                        }
-                    });
+            for (let row = rows - 1; row >= 0 && remaining > 0; row--) {
+                for (let col = colStart; col <= colEnd && remaining > 0; col++) {
+                    if (grid[row][col] === null) {
+                        grid[row][col] = label;
+                        remaining--;
+                    }
                 }
-            });
+            }
             return remaining;
         };
 
-        // Define rules for each cohort
-        const rules = {
-            PPP: [{ rowRange: { start: 0, end: rows - 1 }, columns: [...Array(columns).keys()] }],
-            CC: [{ rowRange: { start: Math.floor(cohorts.PPP / columns), end: rows - 1 }, columns: [...Array(columns).keys()] }],
-            L1: [{ rowRange: { start: rows - 1, end: rows - 1 }, columns: [3, 4] }],
-            L2: [{ rowRange: { start: rows - 1, end: rows - 1 }, columns: [2, 5] }],
-            L3: [{ rowRange: { start: rows - 1, end: rows - 1 }, columns: [1, 6] }],
-            L6: [{ rowRange: { start: rows - 1, end: rows - 1 }, columns: [0, 7] }],
-            L5: [
-                { rowRange: { start: rows - 1, end: rows - 1 }, columns: [0, 7] },
-                { rowRange: { start: rows - 2, end: rows - 2 }, columns: [1, 6] },
-            ],
-            L4: [{ rowRange: { start: 0, end: rows - 1 }, columns: [...Array(columns).keys()] }],
-        };
+        // Place cohorts based on rules
+        cohorts.L6 = placeCohorts("L6", cohorts.L6, 0, 7);
+        cohorts.L5 = placeCohorts("L5", cohorts.L5, 0, 7);
+        cohorts.L1 = placeCohorts("L1", cohorts.L1, 3, 4);
+        cohorts.L2 = placeCohorts("L2", cohorts.L2, 2, 5);
+        cohorts.L3 = placeCohorts("L3", cohorts.L3, 1, 6);
+        cohorts.PPP = placeCohorts("PPP", cohorts.PPP, 0, 7);
+        cohorts.CC = placeCohorts("CC", cohorts.CC, 0, 7);
 
-        // Place cohorts in order
-        Object.entries(rules).forEach(([label, placementRules]) => {
-            cohorts[label] = placeCohort(label, cohorts[label], placementRules);
-        });
-
-        // Fill remaining empty slots with "EMPTY"
+        // Fill empty slots symmetrically
         grid.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-                if (cell === null) grid[rowIndex][colIndex] = "EMPTY";
+            row.forEach((slot, colIndex) => {
+                if (slot === null) grid[rowIndex][colIndex] = "EMPTY";
             });
         });
 
-        // Render the grid
-        const gridTable = document.getElementById("grid-table");
+        // Render grid
         gridTable.innerHTML = "";
 
-        // Column headers
+        // Add header row
         const headerRow = document.createElement("tr");
-        [...Array(columns).keys()].forEach(col => {
+        for (let i = 0; i < columns; i++) {
             const th = document.createElement("th");
-            th.textContent = `Line ${String.fromCharCode(65 + col)}`;
+            th.textContent = `Line ${String.fromCharCode(65 + i)}`;
             headerRow.appendChild(th);
-        });
+        }
         gridTable.appendChild(headerRow);
 
         // Add rows
-        grid.forEach((row, rowIndex) => {
+        grid.forEach((row) => {
             const tr = document.createElement("tr");
-            row.forEach(cell => {
+            row.forEach((cell) => {
                 const td = document.createElement("td");
                 td.textContent = cell;
                 tr.appendChild(td);
             });
             gridTable.appendChild(tr);
         });
+
+        // Display grid
+        gridContainer.classList.remove("hidden");
     });
 });
