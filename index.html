@@ -1,45 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Grid Generator</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cohort Grid Generator</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Password Screen -->
-    <div id="password-screen">
-        <h1>Enter Password</h1>
-        <form id="password-form">
-            <input id="password-input" type="password" placeholder="Enter Password" required />
-            <button type="submit">Submit</button>
-        </form>
-        <p id="error-message" class="hidden">Incorrect password. Please try again.</p>
-    </div>
+  <div id="password-protection">
+    <h2>Enter Password:</h2>
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="validatePassword()">Submit</button>
+    <p id="password-error" style="color: red; display: none;">Incorrect password. Please try again.</p>
+  </div>
 
-    <!-- Cohort Inputs -->
-    <div id="cohort-inputs" class="hidden">
-        <h1>Insert Cohort Populations</h1>
-        <table>
-            <tr><td>PPP:</td><td><input id="PPP" type="number" /></td></tr>
-            <tr><td>L1:</td><td><input id="L1" type="number" /></td></tr>
-            <tr><td>CC:</td><td><input id="CC" type="number" /></td></tr>
-            <tr><td>L2:</td><td><input id="L2" type="number" /></td></tr>
-            <tr><td>L3:</td><td><input id="L3" type="number" /></td></tr>
-            <tr><td>L4:</td><td><input id="L4" type="number" /></td></tr>
-            <tr><td>L5:</td><td><input id="L5" type="number" /></td></tr>
-            <tr><td>L6:</td><td><input id="L6" type="number" /></td></tr>
-        </table>
-        <button id="generate-grid">Generate Grid</button>
-    </div>
+  <div id="main-content" style="display: none;">
+    <h1>Cohort Grid Generator</h1>
+    <form id="cohort-form">
+      <table>
+        <tr><td>PPP:</td><td><input type="number" id="ppp"></td></tr>
+        <tr><td>L1:</td><td><input type="number" id="l1"></td></tr>
+        <tr><td>CC:</td><td><input type="number" id="cc"></td></tr>
+        <tr><td>L2:</td><td><input type="number" id="l2"></td></tr>
+        <tr><td>L3:</td><td><input type="number" id="l3"></td></tr>
+        <tr><td>L4:</td><td><input type="number" id="l4"></td></tr>
+        <tr><td>L5:</td><td><input type="number" id="l5"></td></tr>
+        <tr><td>L6:</td><td><input type="number" id="l6"></td></tr>
+      </table>
+      <button type="button" onclick="generateGrid()">Generate Grid</button>
+    </form>
+    <div id="grid-container"></div>
+  </div>
 
-    <!-- Grid Container -->
-    <div id="grid-container" class="hidden">
-        <h2>Generated Grid</h2>
-        <table id="grid-table" border="1"></table>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
 
