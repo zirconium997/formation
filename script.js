@@ -1,15 +1,25 @@
+// Password for accessing the main content
 const password = "DefileFormations";
 
+// Event listener for password submission
 document.getElementById("password-submit").addEventListener("click", () => {
   const inputPassword = document.getElementById("password-input").value;
   const errorMessage = document.getElementById("password-error");
 
+  // Check if entered password matches the correct password
   if (inputPassword === password) {
+    // Hide the password modal and show the main content
     document.getElementById("password-modal").style.display = "none";
     document.getElementById("main-content").style.display = "block";
   } else {
+    // Show error message if password is incorrect
     errorMessage.style.display = "block";
   }
+});
+
+// Optional: Clear the error message when the user starts typing again
+document.getElementById("password-input").addEventListener("input", () => {
+  document.getElementById("password-error").style.display = "none";
 });
 
 function generateGrid() {
