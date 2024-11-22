@@ -1,78 +1,40 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
-h1, h2 {
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.hidden {
-    display: none;
+#password-protection, #main-content {
+  margin: 50px auto;
+  width: 50%;
 }
 
 table {
-    border-collapse: collapse;
-    margin: 20px auto;
+  margin: 0 auto;
+  text-align: left;
 }
 
-td, th {
-    border: 1px solid black;
-    padding: 10px;
-    text-align: center;
+#grid-container {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
 }
 
-#password-form {
-    margin-top: 50px;
+.grid-cell {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid black;
 }
 
-#password-input {
-    width: 200px;
-    padding: 10px;
-    margin-right: 10px;
-    font-size: 16px;
-}
-
-#password-form button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#password-form button:hover {
-    background-color: #45a049;
-}
-
-#error-message {
-    color: red;
-    font-weight: bold;
-}
-
-#cohort-inputs, #grid-container {
-    margin: 50px auto;
-}
-
-#generate-grid {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#generate-grid:hover {
-    background-color: #0056b3;
-}
-
-#grid-table {
-    margin-top: 30px;
-    border: 2px solid black;
-}
+.ppp { background-color: yellow; }
+.cc { background-color: blue; color: white; }
+.l1 { background-color: gray; color: white; }
+.l2 { background-color: lightblue; }
+.l3 { background-color: lightcoral; }
+.l4 { background-color: orange; }
+.l5 { background-color: green; color: white; }
+.l6 { background-color: darkorange; color: white; }
+.empty { background-color: white; }
