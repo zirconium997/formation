@@ -35,22 +35,24 @@ function generateGrid() {
     }
   }
 
-  // Following cohort priority placement
-  placeCohort(ppp, "PPP", "ppp");
-  placeCohort(cc, "CC", "cc");
-  placeCohort(l6, "L6", "l6");
-  placeCohort(l5, "L5", "l5");
-  placeCohort(l4, "L4", "l4");
-  placeCohort(l3, "L3", "l3");
-  placeCohort(l2, "L2", "l2");
-  placeCohort(l1, "L1", "l1");
+  // Label Rows and Columns
+  const gridHeader = document.getElementById("grid-header");
+  gridHeader.innerHTML = "";
+  const letters = "ABCDEFGH".split("");
+  letters.forEach(letter => {
+    const headerCell = document.createElement("div");
+    headerCell.className = "column-label";
+    headerCell.textContent = `Line ${letter}`;
+    gridHeader.appendChild(headerCell);
+  });
 
-  const gridContainer = document.getElementById("grid-container");
-  gridContainer.innerHTML = "";
+  const gridBody = document.getElementById("grid-body");
+  gridBody.innerHTML = "";
+
   grid.forEach((cell, idx) => {
     const div = document.createElement("div");
     div.className = `grid-cell ${cell.styleClass}`;
     div.textContent = cell.label;
-    gridContainer.appendChild(div);
+    gridBody.appendChild(div);
   });
 }
