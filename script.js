@@ -1,74 +1,54 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const PASSWORD = "DefileFormations";
+const password = "DefileFormations";
 
-    const passwordScreen = document.getElementById("password-screen");
-    const passwordForm = document.getElementById("password-form");
-    const passwordInput = document.getElementById("password-input");
-    const errorMessage = document.getElementById("error-message");
+function validatePassword() {
+  const userPassword = document.getElementById("password").value;
+  const passwordError = document.getElementById("password-error");
+  if (userPassword === password) {
+    document.getElementById("password-protection").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+  } else {
+    passwordError.style.display = "block";
+  }
+}
 
-    const cohortInputs = document.getElementById("cohort-inputs");
-    const gridContainer = document.getElementById("grid-container");
-    const generateGridButton = document.getElementById("generate-grid");
-    const gridTable = document.getElementById("grid-table");
+function generateGrid() {
+  const ppp = parseInt(document.getElementById("ppp").value) || 0;
+  const l1 = parseInt(document.getElementById("l1").value) || 0;
+  const cc = parseInt(document.getElementById("cc").value) || 0;
+  const l2 = parseInt(document.getElementById("l2").value) || 0;
+  const l3 = parseInt(document.getElementById("l3").value) || 0;
+  const l4 = parseInt(document.getElementById("l4").value) || 0;
+  const l5 = parseInt(document.getElementById("l5").value) || 0;
+  const l6 = parseInt(document.getElementById("l6").value) || 0;
 
-    // Password protection logic
-    passwordForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (passwordInput.value === PASSWORD) {
-            passwordScreen.classList.add("hidden");
-            cohortInputs.classList.remove("hidden");
-        } else {
-            errorMessage.classList.remove("hidden");
-        }
-    });
+  const totalPopulation = ppp + l1 + cc + l2 + l3 + l4 + l5 + l6;
+  const rows = Math.ceil(totalPopulation / 8);
+  const grid = Array(rows * 8).fill("EMPTY");
 
-    // Grid generation logic
-    generateGridButton.addEventListener("click", () => {
-        const cohorts = {
-            PPP: parseInt(document.getElementById("PPP").value) || 0,
-            L1: parseInt(document.getElementById("L1").value) || 0,
-            CC: parseInt(document.getElementById("CC").value) || 0,
-            L2: parseInt(document.getElementById("L2").value) || 0,
-            L3: parseInt(document.getElementById("L3").value) || 0,
-            L4: parseInt(document.getElementById("L4").value) || 0,
-            L5: parseInt(document.getElementById("L5").value) || 0,
-            L6: parseInt(document.getElementById("L6").value) || 0,
-        };
+  let index = 0;
 
-        const totalPeople = Object.values(cohorts).reduce((sum, count) => sum + count, 0);
-        const columns = 8;
-        const rows = Math.ceil(totalPeople / columns);
+  function placeCohort(count, label, styleClass) {
+    for (let i = 0; i < count; i++) {
+      while (grid[index] !== "EMPTY") index++;
+      grid[index] = { label, styleClass };
+    }
+  }
 
-        let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
-        let currentRow = 0;
-        let currentColumn = 0;
+  placeCohort(ppp, "PPP", "ppp");
+  placeCohort(cc, "CC", "cc");
+  placeCohort(l6, "L6", "l6");
+  placeCohort(l5, "L5", "l5");
+  placeCohort(l4, "L4", "l4");
+  placeCohort(l3, "L3", "l3");
+  placeCohort(l2, "L2", "l2");
+  placeCohort(l1, "L1", "l1");
 
-        const placeCohorts = (label, count) => {
-            for (let i = 0; i < count; i++) {
-                grid[currentRow][currentColumn] = label;
-                currentColumn++;
-                if (currentColumn >= columns) {
-                    currentColumn = 0;
-                    currentRow++;
-                }
-            }
-        };
-
-        // Place cohorts based on rules
-        placeCohorts("PPP", cohorts.PPP);
-        placeCohorts("CC", cohorts.CC);
-        placeCohorts("L1", cohorts.L1);
-        placeCohorts("L2", cohorts.L2);
-        placeCohorts("L3", cohorts.L3);
-        placeCohorts("L4", cohorts.L4);
-        placeCohorts("L5", cohorts.L5);
-        placeCohorts("L6", cohorts.L6);
-
-        // Render grid
-        gridTable.innerHTML = grid
-            .map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`)
-            .join("");
-
-        gridContainer.classList.remove("hidden");
-    });
-});
+  const gridContainer = document.getElementById("grid-container");
+  gridContainer.innerHTML = "";
+  grid.forEach((cell, idx) => {
+    const div = document.createElement("div");
+    div.className = `grid-cell ${cell.styleClass}`;
+    div.textContent = cell.label;
+    gridContainer.appendChild(div);
+  });
+}
