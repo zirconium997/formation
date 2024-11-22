@@ -7,11 +7,13 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="password-protection">
-    <h2>Enter Password:</h2>
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="validatePassword()">Submit</button>
-    <p id="password-error" style="color: red; display: none;">Incorrect password. Please try again.</p>
+  <div id="password-modal">
+    <div id="password-box">
+      <h2>Enter Password</h2>
+      <input type="password" id="password-input" placeholder="Password">
+      <button id="password-submit">Submit</button>
+      <p id="password-error" class="error-message" style="display: none;">Incorrect password. Please try again.</p>
+    </div>
   </div>
 
   <div id="main-content" style="display: none;">
@@ -35,4 +37,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
