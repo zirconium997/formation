@@ -6,7 +6,7 @@ body {
     padding: 0;
 }
 
-h1 {
+h1, h2 {
     font-weight: bold;
     margin-bottom: 20px;
 }
@@ -24,7 +24,6 @@ td, th {
     border: 1px solid black;
     padding: 10px;
     text-align: center;
-    font-weight: bold;
 }
 
 #password-form {
