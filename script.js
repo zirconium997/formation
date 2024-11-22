@@ -1,15 +1,16 @@
 const password = "DefileFormations";
 
-function validatePassword() {
-  const userPassword = document.getElementById("password").value;
-  const passwordError = document.getElementById("password-error");
-  if (userPassword === password) {
-    document.getElementById("password-protection").style.display = "none";
+document.getElementById("password-submit").addEventListener("click", () => {
+  const inputPassword = document.getElementById("password-input").value;
+  const errorMessage = document.getElementById("password-error");
+
+  if (inputPassword === password) {
+    document.getElementById("password-modal").style.display = "none";
     document.getElementById("main-content").style.display = "block";
   } else {
-    passwordError.style.display = "block";
+    errorMessage.style.display = "block";
   }
-}
+});
 
 function generateGrid() {
   const ppp = parseInt(document.getElementById("ppp").value) || 0;
@@ -34,6 +35,7 @@ function generateGrid() {
     }
   }
 
+  // Following cohort priority placement
   placeCohort(ppp, "PPP", "ppp");
   placeCohort(cc, "CC", "cc");
   placeCohort(l6, "L6", "l6");
