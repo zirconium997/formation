@@ -3,59 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cohort Grid Layout</title>
+    <title>Dynamic Grid Generator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="content" style="display: none;">
-        <h1>Cohort Grid Layout</h1>
+    <div id="cohort-inputs" style="text-align: center; margin-top: 50px;">
+        <h1>Insert Cohort Populations</h1>
+        <table>
+            <tr><td>PPP:</td><td><input id="PPP" type="number" /></td></tr>
+            <tr><td>L1:</td><td><input id="L1" type="number" /></td></tr>
+            <tr><td>CC:</td><td><input id="CC" type="number" /></td></tr>
+            <tr><td>L2:</td><td><input id="L2" type="number" /></td></tr>
+            <tr><td>L3:</td><td><input id="L3" type="number" /></td></tr>
+            <tr><td>L4:</td><td><input id="L4" type="number" /></td></tr>
+            <tr><td>L5:</td><td><input id="L5" type="number" /></td></tr>
+            <tr><td>L6:</td><td><input id="L6" type="number" /></td></tr>
+        </table>
+        <button id="generate-grid">Generate Grid</button>
+    </div>
 
-        <!-- Input Section -->
-        <div id="input-section">
-            <h2>Insert Cohort Populations</h2>
-            <form id="population-form">
-                <table class="input-table">
-                    <tr>
-                        <td><label for="PPP">PPP:</label></td>
-                        <td><input type="number" id="PPP" name="PPP" min="0"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="L1">L1:</label></td>
-                        <td><input type="number" id="L1" name="L1" min="0"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="CC">CC:</label></td>
-                        <td><input type="number" id="CC" name="CC" min="0"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="L2">L2:</label></td>
-                        <td><input type="number" id="L2" name="L2" min="0"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="L3">L3:</label></td>
-                        <td><input type="number" id="L3" name="L3" min="0"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="L4">L4:</label></td>
-                        <td><input type="number" id="L4" name="L4" min="0"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="L5">L5:</label></td>
-                        <td><input type="number" id="L5" name="L5" min="0"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="L6">L6:</label></td>
-                        <td><input type="number" id="L6" name="L6" min="0"></td>
-                    </tr>
-                </table>
-                <button type="button" id="generate-grid">Generate Grid</button>
-            </form>
-        </div>
-
-        <!-- Grid Output -->
-        <div id="grid-container">
-            <table id="grid-table"></table>
-        </div>
+    <div id="grid-container" style="margin: 50px auto; text-align: center;">
+        <table id="grid-table" border="1" style="margin: 0 auto; border-collapse: collapse;"></table>
     </div>
 
     <script src="script.js"></script>
