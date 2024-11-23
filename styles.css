@@ -1,63 +1,65 @@
+/* General styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  text-align: center;
-  background-color: #f9f9f9;
-}
-
-#error-message {
-  color: red;
-}
-
-#password-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  background-color: #f9f9f9;
 }
 
-#password-box {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+/* Password modal */
+#password-modal {
   text-align: center;
+  padding: 20px;
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Main content (hidden initially) */
 #main-content {
+  text-align: center;
   margin: 20px;
 }
 
-table {
+/* Input form */
+form {
   margin: 20px auto;
   text-align: left;
+  display: inline-block;
 }
 
+form label, form input {
+  display: block;
+  margin: 5px 0;
+}
+
+/* Grid container */
 #grid-container {
-  margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
   gap: 5px;
-}
-
-.grid-cell {
+  margin: 20px auto;
+  border: 1px solid #ddd;
   padding: 10px;
-  text-align: center;
-  border: 1px solid black;
+  background: #fff;
 }
 
-.ppp { background-color: yellow; }
-.cc { background-color: blue; color: white; }
-.l1 { background-color: gray; color: white; }
-.l2 { background-color: lightblue; }
-.l3 { background-color: lightcoral; }
-.l4 { background-color: orange; }
-.l5 { background-color: green; color: white; }
-.l6 { background-color: darkorange; color: white; }
-.empty { background-color: white; }
+/* Grid cells */
+.grid-cell {
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-size: 12px;
+}
+
+.grid-label {
+  font-weight: bold;
+  background-color: #ddd;
+  border: none;
+  padding: 5px;
+}
