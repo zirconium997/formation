@@ -1,54 +1,63 @@
-/* General styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  text-align: center;
   background-color: #f9f9f9;
 }
 
-/* Password modal */
-#password-modal {
-  text-align: center;
-  padding: 20px;
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+#error-message {
+  color: red;
 }
 
-/* Main content (hidden initially) */
-#main-content {
+#password-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#password-box {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   text-align: center;
+}
+
+#main-content {
   margin: 20px;
 }
 
-/* Grid container */
-#grid-container {
-  display: grid;
-  gap: 5px;
+table {
   margin: 20px auto;
-  border: 1px solid #ddd;
-  padding: 10px;
-  background: #fff;
+  text-align: left;
 }
 
-/* Grid cells */
+#grid-container {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+}
+
 .grid-cell {
+  padding: 10px;
   text-align: center;
-  font-weight: bold;
-  border: 1px solid #ccc;
-  padding: 5px;
-  font-size: 12px;
+  border: 1px solid black;
 }
 
-.grid-label {
-  font-weight: bold;
-  background-color: #ddd;
-  border: none;
-  padding: 5px;
-}
-
+.ppp { background-color: yellow; }
+.cc { background-color: blue; color: white; }
+.l1 { background-color: gray; color: white; }
+.l2 { background-color: lightblue; }
+.l3 { background-color: lightcoral; }
+.l4 { background-color: orange; }
+.l5 { background-color: green; color: white; }
+.l6 { background-color: darkorange; color: white; }
+.empty { background-color: white; }
