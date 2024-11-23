@@ -3,19 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grid Generator</title>
+  <title>Cohort Grid Generator</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="password-modal">
-    <h1>Enter Password</h1>
-    <input id="password-input" type="password" placeholder="Password">
-    <button id="password-submit">Submit</button>
-    <p id="password-error" style="display: none; color: red;">Incorrect password, please try again.</p>
+    <div id="password-box">
+      <h2>Enter Password</h2>
+      <input type="password" id="password-input" placeholder="Password">
+      <button id="password-submit">Submit</button>
+      <p id="password-error" class="error-message" style="display: none;">Incorrect password. Please try again.</p>
+    </div>
   </div>
 
   <div id="main-content" style="display: none;">
-    <h1>Grid Generator</h1>
+    <h1>Cohort Grid Generator</h1>
+    <form id="cohort-form">
+      <table>
+        <tr><td>PPP:</td><td><input type="number" id="ppp"></td></tr>
+        <tr><td>L1:</td><td><input type="number" id="l1"></td></tr>
+        <tr><td>CC:</td><td><input type="number" id="cc"></td></tr>
+        <tr><td>L2:</td><td><input type="number" id="l2"></td></tr>
+        <tr><td>L3:</td><td><input type="number" id="l3"></td></tr>
+        <tr><td>L4:</td><td><input type="number" id="l4"></td></tr>
+        <tr><td>L5:</td><td><input type="number" id="l5"></td></tr>
+        <tr><td>L6:</td><td><input type="number" id="l6"></td></tr>
+      </table>
+      <button type="button" onclick="generateGrid()">Generate Grid</button>
+    </form>
     <div id="grid-container"></div>
   </div>
 
