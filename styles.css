@@ -15,7 +15,7 @@ h1 {
 
 .container {
     width: 90%;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
     background: #fff;
@@ -35,8 +35,8 @@ table {
 }
 
 td {
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
     border: 1px solid #ccc;
     text-align: center;
     vertical-align: middle;
@@ -46,39 +46,48 @@ td {
 
 /* Color Coding for Cohorts */
 td[style*="background-color: yellow"] {
-    color: #333; /* PPP */
+    background-color: #ffeb3b; /* PPP */
+    color: #333;
 }
 
 td[style*="background-color: blue"] {
-    color: #fff; /* CC */
+    background-color: #2196f3; /* CC */
+    color: #fff;
 }
 
 td[style*="background-color: orange"] {
-    color: #fff; /* L4 */
+    background-color: #ff9800; /* L4 */
+    color: #fff;
 }
 
 td[style*="background-color: green"] {
-    color: #fff; /* L5 */
+    background-color: #4caf50; /* L5 */
+    color: #fff;
 }
 
 td[style*="background-color: gray"] {
-    color: #fff; /* L1 */
+    background-color: #9e9e9e; /* L1 */
+    color: #fff;
 }
 
 td[style*="background-color: lightgray"] {
-    color: #333; /* L2 */
+    background-color: #bdbdbd; /* L2 */
+    color: #333;
 }
 
 td[style*="background-color: lightblue"] {
-    color: #333; /* L3 */
+    background-color: #03a9f4; /* L3 */
+    color: #fff;
 }
 
 td[style*="background-color: tan"] {
-    color: #333; /* L6 */
+    background-color: #dbe3e4; /* L6 */
+    color: #333;
 }
 
 td[style*="background-color: white"] {
-    color: #333; /* EMPTY */
+    background-color: #fff; /* EMPTY */
+    color: #333;
 }
 
 /* Line Number Styling */
@@ -141,8 +150,8 @@ button:hover {
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     td {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         font-size: 12px;
     }
 
@@ -154,4 +163,3 @@ button:hover {
         font-size: 14px;
     }
 }
-
