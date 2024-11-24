@@ -1,14 +1,20 @@
 // Password Validation
 function validatePassword() {
+    // Get the entered password and error message element
     const password = document.getElementById('password').value;
     const errorMessage = document.getElementById('error-message');
+    
+    // Check if the entered password matches the correct one
     if (password === "DefileFormations") {
+        // Hide the password screen and show the population input screen
         document.getElementById('password-screen').style.display = "none";
         document.getElementById('input-screen').style.display = "block";
     } else {
+        // Display an error message for incorrect password
         errorMessage.textContent = "Incorrect Password";
     }
 }
+
 
 // Generate Formation
 function generateFormation() {
