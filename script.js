@@ -10,7 +10,7 @@ function validatePassword() {
 }
 
 function generateFormation() {
-    // Collect cohort values
+    // Get user inputs for cohort sizes
     const cohorts = {
         PPP: parseInt(document.getElementById("PPP").value) || 0,
         L1: parseInt(document.getElementById("L1").value) || 0,
@@ -25,15 +25,105 @@ function generateFormation() {
     const columns = 8;
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
     const rows = Math.ceil(totalPeople / columns);
+    const totalCells = rows * columns;
+    const initialGaps = totalCells - totalPeople;
+
+    // Create empty grid
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Example Logic for PPP placement (replace with your detailed placement rules)
-    let remaining_PPP = cohorts.PPP;
-    for (let row = rows - 1; row >= 0; row--) {
+    // Place PPP cohort
+    const pppRows = Math.ceil(cohorts.PPP / columns);
+    const pppStartRow = rows - pppRows;
+    let remainingPPP = cohorts.PPP;
+
+    for (let row = pppStartRow; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
-            if (remaining_PPP > 0) {
+            if (remainingPPP > 0) {
                 grid[row][col] = "PPP";
-                remaining_PPP--;
+                remainingPPP--;
+            }
+        }
+    }
+
+    // Place CC cohort directly above PPP
+    let remainingCC = cohorts.CC;
+    const ccRow = pppStartRow - 1;
+
+    for (let col = 0; col < columns; col++) {
+        if (remainingCC > 0) {
+            grid[ccRow][col] = "CC";
+            remainingCC--;
+        }
+    }
+
+    // Function to assign cohorts based on the rules
+    function assignCohort(cohort, count, col1, col2, stopRow) {
+        for (let row = 0; row < stopRow; row++) {
+            if (count <= 0) break;
+            if (grid[row][col1] === "EMPTY") {
+                grid[row][col1] = cohort;
+                count--;
+            }
+            if (count > 0 && grid[row][col2] === "EMPTY") {
+                grid[row][col2] = cohort;
+                count--;
+            }
+        }
+        return count;
+    }
+
+    // Place L1, L2, L3, and L6 in specific columns
+    cohorts.L1 = assignCohort("L1", cohorts.L1, 3, 4, rows);
+    cohorts.L2 = assignCohort("L2", cohorts.L2, 2, 5, rows);
+    cohorts.L3 = assignCohort("L3", cohorts.L3, 1, 6, rows);
+    cohorts.L6 = assignCohort("L6", cohorts.L6, 0, 7, rows);
+
+    // Place L5 directly after L6 in columns 1 and 8
+    let remainingL5 = cohorts.L5;
+    for (let row = 0; row < rows; row++) {
+        if (remainingL5 <= 0) break;
+        if (row < ccRow && grid[row][0] === "EMPTY") {
+            grid[row][0] = "L5";
+            remainingL5--;
+        }
+        if (remainingL5 > 0 && row < ccRow && grid[row][7] === "EMPTY") {
+            grid[row][7] = "L5";
+            remainingL5--;
+        }
+    }
+
+    // Fill remaining L5 slots in columns 2 and 7
+    for (let row = 0; row < rows; row++) {
+        if (remainingL5 <= 0) break;
+        if (row < ccRow && grid[row][1] === "EMPTY") {
+            grid[row][1] = "L5";
+            remainingL5--;
+        }
+        if (remainingL5 > 0 && row < ccRow && grid[row][6] === "EMPTY") {
+            grid[row][6] = "L5";
+            remainingL5--;
+        }
+    }
+
+    // Place L4 in remaining empty slots
+    let remainingL4 = cohorts.L4;
+    for (let row = 0; row < rows; row++) {
+        for (let col = 1; col < columns - 1; col++) {
+            if (remainingL4 <= 0) break;
+            if (grid[row][col] === "EMPTY") {
+                grid[row][col] = "L4";
+                remainingL4--;
+            }
+        }
+    }
+
+    // Secondary placement of remaining L4
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < columns; col++) {
+            if (remainingL4 <= 0) break;
+            if (grid[row][col] === "EMPTY") {
+                grid[row][col] = "L4";
+                remainingL4--;
             }
         }
     }
@@ -47,6 +137,7 @@ function generateFormation() {
         .map(row => `<div>${row.map(cell => `<span>${cell}</span>`).join(" | ")}</div>`)
         .join("");
 
+    // Show the grid to the user
     document.getElementById("input-screen").style.display = "none";
     document.getElementById("grid-screen").style.display = "block";
 }
