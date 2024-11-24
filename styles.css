@@ -40,7 +40,7 @@ td, th {
     border: 1px solid #ccc;
     text-align: center;
     vertical-align: middle;
-    font-weight: bold; /* All text is bold */
+    font-weight: bold; /* Make all text bold */
 }
 
 /* Header row styling for Line labels */
@@ -103,15 +103,31 @@ td:last-child {
     color: #666;
 }
 
-/* Line Labels for columns */
-th:nth-child(1) { content: "Line A"; }
-th:nth-child(2) { content: "Line B"; }
-th:nth-child(3) { content: "Line C"; }
-th:nth-child(4) { content: "Line D"; }
-th:nth-child(5) { content: "Line E"; }
-th:nth-child(6) { content: "Line F"; }
-th:nth-child(7) { content: "Line G"; }
-th:nth-child(8) { content: "Line H"; }
+/* Add the Line labels in the table header */
+th:nth-child(1) {
+    content: "Line A";
+}
+th:nth-child(2) {
+    content: "Line B";
+}
+th:nth-child(3) {
+    content: "Line C";
+}
+th:nth-child(4) {
+    content: "Line D";
+}
+th:nth-child(5) {
+    content: "Line E";
+}
+th:nth-child(6) {
+    content: "Line F";
+}
+th:nth-child(7) {
+    content: "Line G";
+}
+th:nth-child(8) {
+    content: "Line H";
+}
 
 /* Input Screen Styling */
 #input-screen {
