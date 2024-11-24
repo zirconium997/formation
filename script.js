@@ -1,47 +1,47 @@
-// Password Validation
 function validatePassword() {
-    // Get the entered password and error message element
     const password = document.getElementById('password').value;
     const errorMessage = document.getElementById('error-message');
-    
-    // Check if the entered password matches the correct one
     if (password === "DefileFormations") {
-        // Hide the password screen and show the population input screen
         document.getElementById('password-screen').style.display = "none";
         document.getElementById('input-screen').style.display = "block";
     } else {
-        // Display an error message for incorrect password
         errorMessage.textContent = "Incorrect Password";
     }
 }
 
-
-// Generate Formation
 function generateFormation() {
+    // Collect cohort values
     const cohorts = {
-        PPP: parseInt(document.getElementById("PPP").value),
-        L1: parseInt(document.getElementById("L1").value),
-        CC: parseInt(document.getElementById("CC").value),
-        L2: parseInt(document.getElementById("L2").value),
-        L3: parseInt(document.getElementById("L3").value),
-        L4: parseInt(document.getElementById("L4").value),
-        L5: parseInt(document.getElementById("L5").value),
-        L6: parseInt(document.getElementById("L6").value),
+        PPP: parseInt(document.getElementById("PPP").value) || 0,
+        L1: parseInt(document.getElementById("L1").value) || 0,
+        CC: parseInt(document.getElementById("CC").value) || 0,
+        L2: parseInt(document.getElementById("L2").value) || 0,
+        L3: parseInt(document.getElementById("L3").value) || 0,
+        L4: parseInt(document.getElementById("L4").value) || 0,
+        L5: parseInt(document.getElementById("L5").value) || 0,
+        L6: parseInt(document.getElementById("L6").value) || 0,
     };
 
-    // Convert Python logic into JavaScript
     const columns = 8;
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
     const rows = Math.ceil(totalPeople / columns);
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Apply cohort placement logic
-    // (Implement your Python logic in JavaScript here)
+    // Example Logic for PPP placement (replace with your detailed placement rules)
+    let remaining_PPP = cohorts.PPP;
+    for (let row = rows - 1; row >= 0; row--) {
+        for (let col = 0; col < columns; col++) {
+            if (remaining_PPP > 0) {
+                grid[row][col] = "PPP";
+                remaining_PPP--;
+            }
+        }
+    }
 
-    // Flip grid vertically
+    // Flip the grid vertically
     const flippedGrid = grid.reverse();
 
-    // Display grid
+    // Display the grid
     const gridOutput = document.getElementById("grid-output");
     gridOutput.innerHTML = flippedGrid
         .map(row => `<div>${row.map(cell => `<span>${cell}</span>`).join(" | ")}</div>`)
