@@ -25,10 +25,8 @@ function generateFormation() {
     const columns = 8;
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
     const rows = Math.ceil(totalPeople / columns);
-    const totalCells = rows * columns;
-    const initialGaps = totalCells - totalPeople;
 
-    // Create empty grid
+    // Create an empty grid
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
     // Place PPP cohort
@@ -73,33 +71,33 @@ function generateFormation() {
     }
 
     // Place L1, L2, L3, and L6 in specific columns
-    cohorts.L1 = assignCohort("L1", cohorts.L1, 3, 4, rows);
-    cohorts.L2 = assignCohort("L2", cohorts.L2, 2, 5, rows);
-    cohorts.L3 = assignCohort("L3", cohorts.L3, 1, 6, rows);
-    cohorts.L6 = assignCohort("L6", cohorts.L6, 0, 7, rows);
+    cohorts.L1 = assignCohort("L1", cohorts.L1, 3, 4, ccRow);
+    cohorts.L2 = assignCohort("L2", cohorts.L2, 2, 5, ccRow);
+    cohorts.L3 = assignCohort("L3", cohorts.L3, 1, 6, ccRow);
+    cohorts.L6 = assignCohort("L6", cohorts.L6, 0, 7, ccRow);
 
     // Place L5 directly after L6 in columns 1 and 8
     let remainingL5 = cohorts.L5;
-    for (let row = 0; row < rows; row++) {
+    for (let row = 0; row < ccRow; row++) {
         if (remainingL5 <= 0) break;
-        if (row < ccRow && grid[row][0] === "EMPTY") {
+        if (grid[row][0] === "EMPTY") {
             grid[row][0] = "L5";
             remainingL5--;
         }
-        if (remainingL5 > 0 && row < ccRow && grid[row][7] === "EMPTY") {
+        if (remainingL5 > 0 && grid[row][7] === "EMPTY") {
             grid[row][7] = "L5";
             remainingL5--;
         }
     }
 
     // Fill remaining L5 slots in columns 2 and 7
-    for (let row = 0; row < rows; row++) {
+    for (let row = 0; row < ccRow; row++) {
         if (remainingL5 <= 0) break;
-        if (row < ccRow && grid[row][1] === "EMPTY") {
+        if (grid[row][1] === "EMPTY") {
             grid[row][1] = "L5";
             remainingL5--;
         }
-        if (remainingL5 > 0 && row < ccRow && grid[row][6] === "EMPTY") {
+        if (remainingL5 > 0 && grid[row][6] === "EMPTY") {
             grid[row][6] = "L5";
             remainingL5--;
         }
@@ -107,7 +105,7 @@ function generateFormation() {
 
     // Place L4 in remaining empty slots
     let remainingL4 = cohorts.L4;
-    for (let row = 0; row < rows; row++) {
+    for (let row = 0; row < ccRow; row++) {
         for (let col = 1; col < columns - 1; col++) {
             if (remainingL4 <= 0) break;
             if (grid[row][col] === "EMPTY") {
@@ -117,7 +115,7 @@ function generateFormation() {
         }
     }
 
-    // Secondary placement of remaining L4
+    // Secondary placement of remaining L4 in any available empty slots
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
             if (remainingL4 <= 0) break;
