@@ -3,111 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Cohort Grid</title>
+    <title>Defile Formations</title>
     <style>
         body {
+            background-color: white;
+            color: black;
+            font-size: 15px;
             font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .grid-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(8, 80px);
-            gap: 5px;
-            margin-top: 20px;
-        }
-        .cell {
-            width: 80px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-        }
-        .header {
-            font-weight: bold;
-            background-color: #e0e0e0;
-        }
-        .axis-labels {
-            display: flex;
-            justify-content: space-between;
-            width: calc(8 * 80px + 7 * 5px); /* Accounts for grid width and gaps */
-        }
-        .axis-row {
-            margin-bottom: 5px;
-        }
-        .axis-col {
-            writing-mode: vertical-lr;
             text-align: center;
+        }
+        h1, label, input, button {
+            font-weight: bold;
+        }
+        .password-container, .input-container, .grid-container {
+            margin-top: 20vh;
+        }
+        input[type="password"], input[type="number"] {
+            font-size: 15px;
+            padding: 5px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .error-message {
+            color: red;
+        }
+        .green-button {
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Dynamic Cohort Grid Generator</h1>
-    <form id="inputForm">
-        <label for="totalSlots">Total Population Slots:</label>
-        <input type="number" id="totalSlots" name="totalSlots" required>
-        <br><br>
-        <button type="button" id="generateGrid">Generate Grid</button>
-    </form>
-
-    <div class="grid-container">
-        <div class="axis-row">
-            <div class="axis-labels">
-                <span>Line A</span>
-                <span>Line B</span>
-                <span>Line C</span>
-                <span>Line D</span>
-                <span>Line E</span>
-                <span>Line F</span>
-                <span>Line G</span>
-                <span>Line H</span>
-            </div>
-        </div>
-        <div id="grid" class="grid"></div>
+    <div class="password-container" id="password-screen">
+        <label for="password">Enter Password:</label><br>
+        <input type="password" id="password" placeholder="Password"><br>
+        <button class="green-button" onclick="validatePassword()">ENTER</button>
+        <p class="error-message" id="error-message"></p>
     </div>
 
-    <script>
-        document.getElementById('generateGrid').addEventListener('click', () => {
-            const totalSlots = parseInt(document.getElementById('totalSlots').value);
-            if (isNaN(totalSlots) || totalSlots <= 0) {
-                alert("Please enter a valid total slot number!");
-                return;
-            }
+    <div class="input-container" id="input-screen" style="display: none;">
+        <h1>Insert Populations</h1>
+        <div id="cohort-inputs">
+            <label>PPP: <input type="number" id="PPP" value="23"></label><br>
+            <label>L1: <input type="number" id="L1" value="13"></label><br>
+            <label>CC: <input type="number" id="CC" value="7"></label><br>
+            <label>L2: <input type="number" id="L2" value="10"></label><br>
+            <label>L3: <input type="number" id="L3" value="12"></label><br>
+            <label>L4: <input type="number" id="L4" value="25"></label><br>
+            <label>L5: <input type="number" id="L5" value="14"></label><br>
+            <label>L6: <input type="number" id="L6" value="16"></label><br>
+        </div>
+        <button class="green-button" onclick="generateFormation()">Generate Formation</button>
+    </div>
 
-            const grid = document.getElementById('grid');
-            grid.innerHTML = ''; // Clear any previous grid
-            const rows = Math.ceil(totalSlots / 8);
+    <div class="grid-container" id="grid-screen" style="display: none;">
+        <h1>Generated Formation</h1>
+        <div id="grid-output"></div>
+    </div>
 
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < 8; j++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-
-                    if (i * 8 + j < totalSlots) {
-                        cell.textContent = 'PPP'; // Temporary placeholder
-                    } else {
-                        cell.textContent = 'EMPTY';
-                    }
-
-                    grid.appendChild(cell);
-                }
-            }
-
-            // Add row labels
-            for (let i = 0; i < rows; i++) {
-                const rowLabel = document.createElement('div');
-                rowLabel.textContent = `Line ${i + 1}`;
-                rowLabel.classList.add('axis-col');
-                grid.appendChild(rowLabel);
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
