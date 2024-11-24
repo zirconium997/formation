@@ -8,34 +8,45 @@
         body {
             background-color: white;
             color: black;
-            font-size: 15px;
             font-family: Arial, sans-serif;
             text-align: center;
         }
-        h1, label, input, button {
+        h1 {
+            font-size: 30px; /* Title font size */
             font-weight: bold;
+        }
+        label, input, button {
+            font-weight: bold;
+            font-size: 20px; /* Minimum font size for all text */
         }
         .password-container, .input-container, .grid-container {
             margin-top: 20vh;
         }
         input[type="password"], input[type="number"] {
-            font-size: 15px;
             padding: 5px;
             margin: 10px;
         }
         button {
             padding: 10px 20px;
-            font-size: 15px;
+            font-size: 20px;
             font-weight: bold;
         }
         .error-message {
             color: red;
+            font-size: 20px; /* Match minimum size for text */
         }
         .green-button {
             background-color: green;
             color: white;
             border: none;
             cursor: pointer;
+        }
+        .grid-output {
+            font-family: monospace;
+            font-size: 20px; /* Ensure grid text is readable */
+            margin: 20px auto;
+            text-align: left;
+            display: inline-block;
         }
     </style>
 </head>
@@ -50,14 +61,14 @@
     <div class="input-container" id="input-screen" style="display: none;">
         <h1>Insert Populations</h1>
         <div id="cohort-inputs">
-            <label>PPP: <input type="number" id="PPP" value="23"></label><br>
-            <label>L1: <input type="number" id="L1" value="13"></label><br>
-            <label>CC: <input type="number" id="CC" value="7"></label><br>
-            <label>L2: <input type="number" id="L2" value="10"></label><br>
-            <label>L3: <input type="number" id="L3" value="12"></label><br>
-            <label>L4: <input type="number" id="L4" value="25"></label><br>
-            <label>L5: <input type="number" id="L5" value="14"></label><br>
-            <label>L6: <input type="number" id="L6" value="16"></label><br>
+            <label>PPP: <input type="number" id="PPP"></label><br>
+            <label>L1: <input type="number" id="L1"></label><br>
+            <label>CC: <input type="number" id="CC"></label><br>
+            <label>L2: <input type="number" id="L2"></label><br>
+            <label>L3: <input type="number" id="L3"></label><br>
+            <label>L4: <input type="number" id="L4"></label><br>
+            <label>L5: <input type="number" id="L5"></label><br>
+            <label>L6: <input type="number" id="L6"></label><br>
         </div>
         <button class="green-button" onclick="generateFormation()">Generate Formation</button>
     </div>
