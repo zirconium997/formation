@@ -1,65 +1,157 @@
-/* General styles */
+/* General Styling */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
-/* Password modal */
-#password-modal {
-  text-align: center;
-  padding: 20px;
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #444;
 }
 
-/* Main content (hidden initially) */
-#main-content {
-  text-align: center;
-  margin: 20px;
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Input form */
+/* Table Styling for the Grid */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 14px;
+    table-layout: fixed;
+}
+
+td {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Color Coding for Cohorts */
+td[style*="background-color: yellow"] {
+    color: #333; /* PPP */
+}
+
+td[style*="background-color: blue"] {
+    color: #fff; /* CC */
+}
+
+td[style*="background-color: orange"] {
+    color: #fff; /* L4 */
+}
+
+td[style*="background-color: green"] {
+    color: #fff; /* L5 */
+}
+
+td[style*="background-color: gray"] {
+    color: #fff; /* L1 */
+}
+
+td[style*="background-color: lightgray"] {
+    color: #333; /* L2 */
+}
+
+td[style*="background-color: lightblue"] {
+    color: #333; /* L3 */
+}
+
+td[style*="background-color: tan"] {
+    color: #333; /* L6 */
+}
+
+td[style*="background-color: white"] {
+    color: #333; /* EMPTY */
+}
+
+/* Line Number Styling */
+td:last-child {
+    font-size: 12px;
+    font-weight: normal;
+    color: #666;
+}
+
+/* Input Screen Styling */
+#input-screen {
+    display: block;
+    text-align: center;
+    padding: 20px;
+}
+
+#grid-screen {
+    display: none;
+    text-align: center;
+}
+
+/* Form Styling */
 form {
-  margin: 20px auto;
-  text-align: left;
-  display: inline-block;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-form label, form input {
-  display: block;
-  margin: 5px 0;
+form label {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 5px;
 }
 
-/* Grid container */
-#grid-container {
-  display: grid;
-  gap: 5px;
-  margin: 20px auto;
-  border: 1px solid #ddd;
-  padding: 10px;
-  background: #fff;
+form input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Grid cells */
-.grid-cell {
-  text-align: center;
-  font-weight: bold;
-  border: 1px solid #ccc;
-  padding: 5px;
-  font-size: 12px;
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
-.grid-label {
-  font-weight: bold;
-  background-color: #ddd;
-  border: none;
-  padding: 5px;
+button:hover {
+    background-color: #0056b3;
 }
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    td {
+        width: 40px;
+        height: 40px;
+        font-size: 12px;
+    }
+
+    form input {
+        font-size: 12px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
+
