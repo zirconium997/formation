@@ -22,14 +22,14 @@ function generateFormation() {
         L6: parseInt(document.getElementById("L6").value) || 0,
     };
 
-    const columns = 8;
+    const columns = 8; // Fixed number of columns
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
     const rows = Math.ceil(totalPeople / columns);
 
     // Create an empty grid
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Place PPP cohort
+    // Step 1: Place PPP cohort
     const pppRows = Math.ceil(cohorts.PPP / columns);
     const pppStartRow = rows - pppRows;
     let remainingPPP = cohorts.PPP;
@@ -43,7 +43,7 @@ function generateFormation() {
         }
     }
 
-    // Place CC cohort directly above PPP
+    // Step 2: Place CC cohort above PPP
     let remainingCC = cohorts.CC;
     const ccRow = pppStartRow - 1;
 
@@ -70,13 +70,13 @@ function generateFormation() {
         return count;
     }
 
-    // Place L1, L2, L3, and L6 in specific columns
+    // Step 3: Assign L1, L2, L3, and L6 in specified columns
     cohorts.L1 = assignCohort("L1", cohorts.L1, 3, 4, ccRow);
     cohorts.L2 = assignCohort("L2", cohorts.L2, 2, 5, ccRow);
     cohorts.L3 = assignCohort("L3", cohorts.L3, 1, 6, ccRow);
     cohorts.L6 = assignCohort("L6", cohorts.L6, 0, 7, ccRow);
 
-    // Place L5 directly after L6 in columns 1 and 8
+    // Step 4: Place L5 in columns 1 and 8, ensuring dynamic placement
     let remainingL5 = cohorts.L5;
     for (let row = 0; row < ccRow; row++) {
         if (remainingL5 <= 0) break;
@@ -90,20 +90,7 @@ function generateFormation() {
         }
     }
 
-    // Fill remaining L5 slots in columns 2 and 7
-    for (let row = 0; row < ccRow; row++) {
-        if (remainingL5 <= 0) break;
-        if (grid[row][1] === "EMPTY") {
-            grid[row][1] = "L5";
-            remainingL5--;
-        }
-        if (remainingL5 > 0 && grid[row][6] === "EMPTY") {
-            grid[row][6] = "L5";
-            remainingL5--;
-        }
-    }
-
-    // Place L4 in remaining empty slots
+    // Step 5: Place L4 in remaining empty slots
     let remainingL4 = cohorts.L4;
     for (let row = 0; row < ccRow; row++) {
         for (let col = 1; col < columns - 1; col++) {
@@ -115,25 +102,48 @@ function generateFormation() {
         }
     }
 
-    // Secondary placement of remaining L4 in any available empty slots
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < columns; col++) {
-            if (remainingL4 <= 0) break;
-            if (grid[row][col] === "EMPTY") {
-                grid[row][col] = "L4";
-                remainingL4--;
-            }
+    // Step 6: Flip the grid vertically
+    const flippedGrid = grid.reverse();
+
+    // Step 7: Swap L4/L5 in the first row with PPP in the last row
+    for (let col = 0; col < columns; col++) {
+        const firstRowCell = flippedGrid[0][col];
+        const lastRowPPP = flippedGrid[flippedGrid.length - 1][col];
+
+        if ((firstRowCell === "L4" || firstRowCell === "L5") && lastRowPPP === "PPP") {
+            flippedGrid[0][col] = "PPP";
+            flippedGrid[flippedGrid.length - 1][col] = firstRowCell;
         }
     }
 
-    // Flip the grid vertically
-    const flippedGrid = grid.reverse();
+    // Cohort colors
+    const colors = {
+        PPP: "yellow",
+        CC: "blue",
+        L1: "gray",
+        L2: "lightgray",
+        L3: "lightblue",
+        L4: "orange",
+        L5: "green",
+        L6: "tan",
+        EMPTY: "white",
+    };
 
-    // Display the grid
+    // Step 8: Render the grid as a styled table
     const gridOutput = document.getElementById("grid-output");
-    gridOutput.innerHTML = flippedGrid
-        .map(row => `<div>${row.map(cell => `<span>${cell}</span>`).join(" | ")}</div>`)
-        .join("");
+    let tableHTML = "<table>";
+
+    flippedGrid.forEach((row, rowIndex) => {
+        tableHTML += "<tr>";
+        row.forEach(cell => {
+            tableHTML += `<td style="background-color: ${colors[cell]};">${cell}</td>`;
+        });
+        tableHTML += `<td>Line ${rowIndex + 1}</td>`; // Line numbers
+        tableHTML += "</tr>";
+    });
+
+    tableHTML += "</table>";
+    gridOutput.innerHTML = tableHTML;
 
     // Show the grid to the user
     document.getElementById("input-screen").style.display = "none";
