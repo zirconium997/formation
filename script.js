@@ -18,15 +18,8 @@ document.getElementById("password-input").addEventListener("input", () => {
   document.getElementById("password-error").style.display = "none";
 });
 
-// Event listener for grid generation
-document.getElementById("generate-grid").addEventListener("click", generateGrid);
-
-// Function to generate the grid
-function generateGrid() {
-  const container = document.getElementById("grid-container");
-  container.innerHTML = ""; // Clear any existing grid
-
-  // Collect input values for cohorts
+document.getElementById("generate").addEventListener("click", function () {
+  // Fetch cohort sizes from inputs
   const cohorts = {
     PPP: parseInt(document.getElementById("PPP").value) || 0,
     CC: parseInt(document.getElementById("CC").value) || 0,
@@ -38,76 +31,81 @@ function generateGrid() {
     L6: parseInt(document.getElementById("L6").value) || 0,
   };
 
-  const totalPeople = Object.values(cohorts).reduce((sum, val) => sum + val, 0);
-  const columns = 8; // Always 8 columns
-  const rows = Math.ceil(totalPeople / columns); // Determine number of rows
+  const columns = 8;
+  const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
+  const rows = Math.ceil(totalPeople / columns);
+  const totalCells = rows * columns;
+  const initialGaps = totalCells - totalPeople;
 
-  // Add column labels (Line A to Line H)
-  const columnLabels = ["A", "B", "C", "D", "E", "F", "G", "H"];
-  const headerRow = document.createElement("div");
-  headerRow.className = "grid-label-row";
-  columnLabels.forEach((label) => {
-    const labelCell = document.createElement("div");
-    labelCell.className = "grid-label";
-    labelCell.textContent = `Line ${label}`;
-    headerRow.appendChild(labelCell);
-  });
-  container.appendChild(headerRow);
+  // Create an empty grid
+  let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-  // Generate the grid
-  let personIndex = 0;
-  for (let i = 0; i < rows; i++) {
-    const row = document.createElement("div");
-    row.className = "grid-row";
-
-    for (let j = 0; j < columns; j++) {
-      const cell = document.createElement("div");
-      cell.className = "grid-cell";
-
-      if (personIndex < totalPeople) {
-        const cohort = determineCohort(cohorts, personIndex);
-        cell.textContent = cohort;
-        cell.style.backgroundColor = getColor(cohort);
-        personIndex++;
-      } else {
-        cell.textContent = "EMPTY";
-        cell.style.backgroundColor = "#f0f0f0";
+  // Placement Functions
+  function placeCohort(cohort, count, col1, col2, stopRow) {
+    for (let row = 0; row < stopRow; row++) {
+      if (count <= 0) break;
+      if (grid[row][col1] === "EMPTY") {
+        grid[row][col1] = cohort;
+        count--;
       }
-
-      row.appendChild(cell);
+      if (count > 0 && grid[row][col2] === "EMPTY") {
+        grid[row][col2] = cohort;
+        count--;
+      }
     }
-
-    const rowLabel = document.createElement("div");
-    rowLabel.className = "grid-label";
-    rowLabel.textContent = `Line ${i + 1}`;
-    row.appendChild(rowLabel);
-
-    container.appendChild(row);
+    return count;
   }
-}
 
-// Function to determine cohort placement
-function determineCohort(cohorts, index) {
-  let cumulative = 0;
-  for (const [key, value] of Object.entries(cohorts)) {
-    cumulative += value;
-    if (index < cumulative) return key;
+  // Place PPP
+  let remainingPPP = cohorts.PPP;
+  for (let row = rows - Math.ceil(cohorts.PPP / columns); row < rows; row++) {
+    for (let col = 0; col < columns; col++) {
+      if (remainingPPP > 0) {
+        grid[row][col] = "PPP";
+        remainingPPP--;
+      }
+    }
   }
-  return "EMPTY";
-}
 
-// Function to get color based on cohort
-function getColor(cohort) {
-  const colors = {
-    PPP: "#ffff99",
-    CC: "#99ccff",
-    L4: "#ffcc99",
-    L5: "#99cc99",
-    L6: "#cccccc",
-    L3: "#99cccc",
-    L2: "#ff9966",
-    L1: "#ccccff",
-    EMPTY: "#f0f0f0",
-  };
-  return colors[cohort] || "#ffffff";
-}
+  // Place CC
+  let remainingCC = cohorts.CC;
+  const ccRow = rows - Math.ceil(cohorts.PPP / columns) - 1;
+  for (let col = 0; col < columns; col++) {
+    if (remainingCC > 0) {
+      grid[ccRow][col] = "CC";
+      remainingCC--;
+    }
+  }
+
+  // Place other cohorts
+  cohorts.L1 = placeCohort("L1", cohorts.L1, 3, 4, rows);
+  cohorts.L2 = placeCohort("L2", cohorts.L2, 2, 5, rows);
+  cohorts.L3 = placeCohort("L3", cohorts.L3, 1, 6, rows);
+  cohorts.L6 = placeCohort("L6", cohorts.L6, 0, 7, rows);
+
+  // Fill remaining slots with L4
+  let remainingL4 = cohorts.L4;
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < columns; col++) {
+      if (remainingL4 > 0 && grid[row][col] === "EMPTY") {
+        grid[row][col] = "L4";
+        remainingL4--;
+      }
+    }
+  }
+
+  // Flip the grid vertically
+  grid.reverse();
+
+  // Render the grid
+  const gridContainer = document.getElementById("grid");
+  gridContainer.innerHTML = ""; // Clear previous grid
+  grid.forEach((row) => {
+    row.forEach((cell) => {
+      const cellDiv = document.createElement("div");
+      cellDiv.className = `cell ${cell}`;
+      cellDiv.textContent = cell;
+      gridContainer.appendChild(cellDiv);
+    });
+  });
+});
