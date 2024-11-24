@@ -30,18 +30,23 @@ table {
     border-collapse: collapse;
     margin: 20px auto;
     text-align: center;
-    font-size: 14px;
+    font-size: 20px; /* Updated font size for entire grid */
     table-layout: fixed;
 }
 
-td {
-    width: 70px;
-    height: 70px;
+td, th {
+    width: 12.5%; /* Ensure equal column width */
+    height: 70px;  /* Maintain cell height */
     border: 1px solid #ccc;
     text-align: center;
     vertical-align: middle;
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: bold; /* All text is now bold */
+}
+
+/* Header row styling for Line labels */
+th {
+    background-color: #f1f1f1; /* Light gray background for header */
+    color: #333;
 }
 
 /* Color Coding for Cohorts */
@@ -92,10 +97,20 @@ td[style*="background-color: white"] {
 
 /* Line Number Styling */
 td:last-child {
-    font-size: 12px;
+    font-size: 18px; /* Slightly smaller font for line numbers */
     font-weight: normal;
     color: #666;
 }
+
+/* Line Labels for columns */
+th:nth-child(1) { content: "Line A"; }
+th:nth-child(2) { content: "Line B"; }
+th:nth-child(3) { content: "Line C"; }
+th:nth-child(4) { content: "Line D"; }
+th:nth-child(5) { content: "Line E"; }
+th:nth-child(6) { content: "Line F"; }
+th:nth-child(7) { content: "Line G"; }
+th:nth-child(8) { content: "Line H"; }
 
 /* Input Screen Styling */
 #input-screen {
@@ -152,7 +167,7 @@ button:hover {
     td {
         width: 50px;
         height: 50px;
-        font-size: 12px;
+        font-size: 16px; /* Adjust for smaller screens */
     }
 
     form input {
@@ -163,3 +178,4 @@ button:hover {
         font-size: 14px;
     }
 }
+
