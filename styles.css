@@ -89,53 +89,10 @@ td:last-child {
 }
 
 /* Input Screen Styling */
-#input-screen {
-    display: block;
-    text-align: center;
-    padding: 20px;
-}
-
-#grid-screen {
+#input-screen, #grid-screen {
     display: none;
     text-align: center;
-}
-
-/* Form Styling */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-form label {
-    font-size: 14px;
-    font-weight: bold;
-    text-align: left;
-    margin-bottom: 5px;
-}
-
-form input {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-button:hover {
-    background-color: #0056b3;
+    padding: 20px;
 }
 
 /* Responsive Design */
