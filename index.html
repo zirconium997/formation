@@ -11,7 +11,6 @@
             background-color: #f4f4f9;
             margin: 0;
             padding: 0;
-            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,8 +30,8 @@
 
         h1 {
             font-size: 24px;
-            color: #444;
             font-weight: bold;
+            color: #333;
         }
 
         form {
@@ -44,17 +43,17 @@
             font-weight: bold;
             display: block;
             margin-bottom: 10px;
+            text-align: left;
         }
 
-        input {
-            font-size: 20px;
-            font-weight: bold;
+        input[type="password"], input[type="number"] {
+            font-size: 18px;
             padding: 10px;
             width: 100%;
-            box-sizing: border-box;
             margin-bottom: 20px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            box-sizing: border-box;
         }
 
         button {
@@ -62,7 +61,7 @@
             font-weight: bold;
             background-color: #4caf50; /* Green button */
             color: white;
-            padding: 10px 20px;
+            padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -73,63 +72,102 @@
             background-color: #45a049; /* Slightly darker green on hover */
         }
 
-        /* Center the entire interface */
-        .center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        .aligned-labels {
+            text-align: left;
+        }
+
+        .aligned-labels label, .aligned-labels input {
+            display: inline-block;
+            margin: 10px 0;
+            vertical-align: middle;
+        }
+
+        .aligned-labels label {
+            width: 20%; /* Consistent label width */
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .aligned-labels input {
+            width: 75%;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="password-page">
         <h1>Enter Password</h1>
         <form id="password-form">
-            <label for="password">Enter Password:</label>
             <input type="password" id="password" placeholder="Enter your password" required>
             <button type="submit">ENTER</button>
         </form>
-        <div id="population-form" style="display: none;">
-            <h1>Enter Cohort Population</h1>
-            <form id="cohort-form">
-                <label for="ppp">PPP Population:</label>
-                <input type="number" id="ppp" placeholder="Number of PPP members" required>
-                <label for="cc">CC Population:</label>
-                <input type="number" id="cc" placeholder="Number of CC members" required>
-                <label for="l5">L5 Population:</label>
-                <input type="number" id="l5" placeholder="Number of L5 members" required>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+    </div>
+
+    <div class="container" id="cohort-page" style="display: none;">
+        <h1>Enter Cohort Populations</h1>
+        <form id="cohort-form">
+            <div class="aligned-labels">
+                <label for="ppp">PPP:</label>
+                <input type="number" id="ppp" placeholder="Enter PPP count" required>
+                <br>
+                <label for="l1">L1:</label>
+                <input type="number" id="l1" placeholder="Enter L1 count" required>
+                <br>
+                <label for="cc">CC:</label>
+                <input type="number" id="cc" placeholder="Enter CC count" required>
+                <br>
+                <label for="l2">L2:</label>
+                <input type="number" id="l2" placeholder="Enter L2 count" required>
+                <br>
+                <label for="l3">L3:</label>
+                <input type="number" id="l3" placeholder="Enter L3 count" required>
+                <br>
+                <label for="l4">L4:</label>
+                <input type="number" id="l4" placeholder="Enter L4 count" required>
+                <br>
+                <label for="l5">L5:</label>
+                <input type="number" id="l5" placeholder="Enter L5 count" required>
+                <br>
+                <label for="l6">L6:</label>
+                <input type="number" id="l6" placeholder="Enter L6 count" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
     </div>
 
     <script>
         const password = "DefileFormations"; // Correct password
 
+        // Handle password form submission
         document.getElementById("password-form").addEventListener("submit", (event) => {
             event.preventDefault();
             const enteredPassword = document.getElementById("password").value;
 
             if (enteredPassword === password) {
-                alert("Password correct! Proceeding...");
-                document.getElementById("password-form").style.display = "none";
-                document.getElementById("population-form").style.display = "block";
+                // Show cohort form and hide password form
+                document.getElementById("password-page").style.display = "none";
+                document.getElementById("cohort-page").style.display = "block";
             } else {
                 alert("Incorrect password. Try again.");
             }
         });
 
+        // Handle cohort form submission
         document.getElementById("cohort-form").addEventListener("submit", (event) => {
             event.preventDefault();
-            const ppp = document.getElementById("ppp").value;
-            const cc = document.getElementById("cc").value;
-            const l5 = document.getElementById("l5").value;
+            const populations = {
+                PPP: document.getElementById("ppp").value,
+                L1: document.getElementById("l1").value,
+                CC: document.getElementById("cc").value,
+                L2: document.getElementById("l2").value,
+                L3: document.getElementById("l3").value,
+                L4: document.getElementById("l4").value,
+                L5: document.getElementById("l5").value,
+                L6: document.getElementById("l6").value,
+            };
 
-            alert(`PPP: ${ppp}, CC: ${cc}, L5: ${l5}`);
-            // Logic to generate and display the grid goes here
+            console.log("Cohort Populations:", populations);
+            // Further logic for grid generation can be added here
         });
     </script>
 </body>
 </html>
-
