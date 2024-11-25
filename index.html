@@ -3,171 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ballet Cohort Grid</title>
+    <title>Grid Formation</title>
     <style>
         /* General Styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #444;
         }
 
         .container {
             width: 90%;
-            max-width: 400px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table Styling for the Grid */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            text-align: center;
+            font-size: 14px;
+            table-layout: fixed;
+        }
+
+        td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Color Coding for Cohorts */
+        td[style*="background-color: yellow"] { color: #333; } /* PPP */
+        td[style*="background-color: blue"] { color: #fff; } /* CC */
+        td[style*="background-color: orange"] { color: #fff; } /* L4 */
+        td[style*="background-color: green"] { color: #fff; } /* L5 */
+        td[style*="background-color: gray"] { color: #fff; } /* L1 */
+        td[style*="background-color: lightgray"] { color: #333; } /* L2 */
+        td[style*="background-color: lightblue"] { color: #333; } /* L3 */
+        td[style*="background-color: tan"] { color: #333; } /* L6 */
+        td[style*="background-color: white"] { color: #333; } /* EMPTY */
+
+        /* Line Number Styling */
+        td:last-child {
+            font-size: 12px;
+            font-weight: normal;
+            color: #666;
+        }
+
+        /* Input Screen Styling */
+        #input-screen {
+            text-align: center;
             padding: 20px;
+        }
+
+        #grid-screen {
+            display: none;
             text-align: center;
         }
 
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-
+        /* Form Styling */
         form {
-            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        label {
-            font-size: 20px;
+        form label {
+            font-size: 14px;
             font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
             text-align: left;
+            margin-bottom: 5px;
         }
 
-        input[type="password"], input[type="number"] {
-            font-size: 18px;
+        form input {
             padding: 10px;
-            width: 100%;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
+            font-size: 14px;
+            border: 1px solid #ccc;
             border-radius: 5px;
+            width: 100%;
             box-sizing: border-box;
         }
 
         button {
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #4caf50; /* Green button */
-            color: white;
-            padding: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: 100%;
+            margin-top: 10px;
         }
 
         button:hover {
-            background-color: #45a049; /* Slightly darker green on hover */
+            background-color: #0056b3;
         }
 
-        .aligned-labels {
-            text-align: left;
-        }
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            td {
+                width: 40px;
+                height: 40px;
+                font-size: 12px;
+            }
 
-        .aligned-labels label, .aligned-labels input {
-            display: inline-block;
-            margin: 10px 0;
-            vertical-align: middle;
-        }
+            form input {
+                font-size: 12px;
+            }
 
-        .aligned-labels label {
-            width: 20%; /* Consistent label width */
-            text-align: right;
-            padding-right: 10px;
-        }
-
-        .aligned-labels input {
-            width: 75%;
+            button {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="password-page">
-        <h1>Enter Password</h1>
-        <form id="password-form">
-            <input type="password" id="password" placeholder="Enter your password" required>
-            <button type="submit">ENTER</button>
-        </form>
-    </div>
+    <h1>Grid Formation Tool</h1>
+    <div class="container">
+        <!-- Password Screen -->
+        <div id="password-screen">
+            <h2>Enter Password</h2>
+            <input type="password" id="password" placeholder="Enter Password">
+            <button onclick="validatePassword()">Enter</button>
+            <p id="error-message" style="color: red;"></p>
+        </div>
 
-    <div class="container" id="cohort-page" style="display: none;">
-        <h1>Enter Cohort Populations</h1>
-        <form id="cohort-form">
-            <div class="aligned-labels">
-                <label for="ppp">PPP:</label>
-                <input type="number" id="ppp" placeholder="Enter PPP count" required>
-                <br>
-                <label for="l1">L1:</label>
-                <input type="number" id="l1" placeholder="Enter L1 count" required>
-                <br>
-                <label for="cc">CC:</label>
-                <input type="number" id="cc" placeholder="Enter CC count" required>
-                <br>
-                <label for="l2">L2:</label>
-                <input type="number" id="l2" placeholder="Enter L2 count" required>
-                <br>
-                <label for="l3">L3:</label>
-                <input type="number" id="l3" placeholder="Enter L3 count" required>
-                <br>
-                <label for="l4">L4:</label>
-                <input type="number" id="l4" placeholder="Enter L4 count" required>
-                <br>
-                <label for="l5">L5:</label>
-                <input type="number" id="l5" placeholder="Enter L5 count" required>
-                <br>
-                <label for="l6">L6:</label>
-                <input type="number" id="l6" placeholder="Enter L6 count" required>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
+        <!-- Input Screen -->
+        <div id="input-screen">
+            <h2>Enter Cohort Numbers</h2>
+            <form id="cohort-form">
+                <label for="PPP">PPP</label>
+                <input type="number" id="PPP" placeholder="Enter PPP size">
+
+                <label for="L1">L1</label>
+                <input type="number" id="L1" placeholder="Enter L1 size">
+
+                <label for="CC">CC</label>
+                <input type="number" id="CC" placeholder="Enter CC size">
+
+                <label for="L2">L2</label>
+                <input type="number" id="L2" placeholder="Enter L2 size">
+
+                <label for="L3">L3</label>
+                <input type="number" id="L3" placeholder="Enter L3 size">
+
+                <label for="L4">L4</label>
+                <input type="number" id="L4" placeholder="Enter L4 size">
+
+                <label for="L5">L5</label>
+                <input type="number" id="L5" placeholder="Enter L5 size">
+
+                <label for="L6">L6</label>
+                <input type="number" id="L6" placeholder="Enter L6 size">
+
+                <button type="button" onclick="generateFormation()">Generate Grid</button>
+            </form>
+        </div>
+
+        <!-- Grid Screen -->
+        <div id="grid-screen">
+            <h2>Generated Grid</h2>
+            <div id="grid-output"></div>
+            <button onclick="location.reload()">Restart</button>
+        </div>
     </div>
 
     <script>
-        const password = "DefileFormations"; // Correct password
-
-        // Handle password form submission
-        document.getElementById("password-form").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const enteredPassword = document.getElementById("password").value;
-
-            if (enteredPassword === password) {
-                // Show cohort form and hide password form
-                document.getElementById("password-page").style.display = "none";
-                document.getElementById("cohort-page").style.display = "block";
-            } else {
-                alert("Incorrect password. Try again.");
-            }
-        });
-
-        // Handle cohort form submission
-        document.getElementById("cohort-form").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const populations = {
-                PPP: document.getElementById("ppp").value,
-                L1: document.getElementById("l1").value,
-                CC: document.getElementById("cc").value,
-                L2: document.getElementById("l2").value,
-                L3: document.getElementById("l3").value,
-                L4: document.getElementById("l4").value,
-                L5: document.getElementById("l5").value,
-                L6: document.getElementById("l6").value,
-            };
-
-            console.log("Cohort Populations:", populations);
-            // Further logic for grid generation can be added here
-        });
+        /* Include JavaScript from your provided code */
+        /* Ensure it matches */
     </script>
 </body>
 </html>
