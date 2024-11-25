@@ -84,16 +84,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>Password Protected</h1>
+        <h1>Access Ballet Cohort Grid</h1>
         <form id="password-form">
             <label for="password">Enter Password:</label>
             <input type="password" id="password" placeholder="Enter your password" required>
             <button type="submit">ENTER</button>
         </form>
+        <div id="population-form" style="display: none;">
+            <h1>Enter Cohort Population</h1>
+            <form id="cohort-form">
+                <label for="ppp">PPP Population:</label>
+                <input type="number" id="ppp" placeholder="Number of PPP members" required>
+                <label for="cc">CC Population:</label>
+                <input type="number" id="cc" placeholder="Number of CC members" required>
+                <label for="l5">L5 Population:</label>
+                <input type="number" id="l5" placeholder="Number of L5 members" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        const password = "DefileFormation"; // Replace with your desired password
+        const password = "securePassword"; // Replace with your desired password
 
         document.getElementById("password-form").addEventListener("submit", (event) => {
             event.preventDefault();
@@ -101,13 +113,21 @@
 
             if (enteredPassword === password) {
                 alert("Password correct! Proceeding...");
-                document.querySelector(".container").innerHTML = `
-                    <h1>Access Granted</h1>
-                    <p>Redirecting to the next step...</p>`;
-                // Insert logic here to show the population form or redirect
+                document.getElementById("password-form").style.display = "none";
+                document.getElementById("population-form").style.display = "block";
             } else {
                 alert("Incorrect password. Try again.");
             }
+        });
+
+        document.getElementById("cohort-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const ppp = document.getElementById("ppp").value;
+            const cc = document.getElementById("cc").value;
+            const l5 = document.getElementById("l5").value;
+
+            alert(`PPP: ${ppp}, CC: ${cc}, L5: ${l5}`);
+            // Logic to generate and display the grid goes here
         });
     </script>
 </body>
