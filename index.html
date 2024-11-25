@@ -58,51 +58,44 @@
         }
 
         /* Background Colors for Cohorts */
-        td[style*="background-color: yellow"] {
+        td[data-cohort="PPP"] {
             background-color: #ffeb3b; /* PPP */
             color: #333;
         }
 
-        td[style*="background-color: blue"] {
+        td[data-cohort="CC"] {
             background-color: #2196f3; /* CC */
             color: #fff;
         }
 
-        td[style*="background-color: orange"] {
+        td[data-cohort="L4"] {
             background-color: #ff9800; /* L4 */
             color: #fff;
         }
 
-        td[style*="background-color: green"] {
+        td[data-cohort="L5"] {
             background-color: #4caf50; /* L5 */
             color: #fff;
         }
 
-        td[style*="background-color: gray"] {
+        td[data-cohort="L1"] {
             background-color: #9e9e9e; /* L1 */
             color: #fff;
         }
 
-        td[style*="background-color: lightgray"] {
+        td[data-cohort="L2"] {
             background-color: #bdbdbd; /* L2 */
             color: #333;
         }
 
-        td[style*="background-color: lightblue"] {
+        td[data-cohort="L3"] {
             background-color: #03a9f4; /* L3 */
             color: #fff;
         }
 
-        td[style*="background-color: tan"] {
+        td[data-cohort="L6"] {
             background-color: #dbe3e4; /* L6 */
             color: #333;
-        }
-
-        /* Line Label Styling (Top of Table) */
-        thead th {
-            background-color: #d9edf7;
-            color: #333;
-            font-weight: bold;
         }
 
         /* Responsive Design */
@@ -121,7 +114,12 @@
 <body>
     <div class="container">
         <h1>Ballet Cohort Grid</h1>
-        <table>
+        <form id="login-form">
+            <label for="password">Enter Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Submit</button>
+        </form>
+        <table id="grid" style="display: none;">
             <thead>
                 <tr>
                     <th>Line A</th>
@@ -139,5 +137,42 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        const correctPassword = "DefileFormations"; // Set your password here
+        const cohorts = ["PPP", "CC", "L4", "L5", "L1", "L2", "L3", "L6"]; // Example cohort labels
+
+        // Handle login form
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const password = document.getElementById("password").value;
+            if (password === correctPassword) {
+                document.getElementById("login-form").style.display = "none";
+                document.getElementById("grid").style.display = "table";
+                generateGrid();
+            } else {
+                alert("Incorrect password. Please try again.");
+            }
+        });
+
+        // Function to generate grid dynamically
+        function generateGrid() {
+            const rows = 10; // Adjust the number of rows as needed
+            const columns = 8; // Always 8 columns
+            const tbody = document.querySelector("tbody");
+
+            for (let i = 0; i < rows; i++) {
+                const tr = document.createElement("tr");
+                for (let j = 0; j < columns; j++) {
+                    const td = document.createElement("td");
+                    const cohort = cohorts[Math.floor(Math.random() * cohorts.length)];
+                    td.textContent = cohort; // Example cohort text
+                    td.setAttribute("data-cohort", cohort); // Apply cohort styling
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+        }
+    </script>
 </body>
 </html>
