@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grid Formation</title>
+    <title>Defile Formations</title>
     <style>
         /* General Styling */
         body {
@@ -52,15 +52,15 @@
         }
 
         /* Color Coding for Cohorts */
-        td[style*="background-color: yellow"] { color: #333; } /* PPP */
-        td[style*="background-color: blue"] { color: #fff; } /* CC */
-        td[style*="background-color: orange"] { color: #fff; } /* L4 */
-        td[style*="background-color: green"] { color: #fff; } /* L5 */
-        td[style*="background-color: gray"] { color: #fff; } /* L1 */
-        td[style*="background-color: lightgray"] { color: #333; } /* L2 */
-        td[style*="background-color: lightblue"] { color: #333; } /* L3 */
-        td[style*="background-color: tan"] { color: #333; } /* L6 */
-        td[style*="background-color: white"] { color: #333; } /* EMPTY */
+        td[style*="background-color: yellow"] { color: #333; }
+        td[style*="background-color: blue"] { color: #fff; }
+        td[style*="background-color: orange"] { color: #fff; }
+        td[style*="background-color: green"] { color: #fff; }
+        td[style*="background-color: gray"] { color: #fff; }
+        td[style*="background-color: lightgray"] { color: #333; }
+        td[style*="background-color: lightblue"] { color: #333; }
+        td[style*="background-color: tan"] { color: #333; }
+        td[style*="background-color: white"] { color: #333; }
 
         /* Line Number Styling */
         td:last-child {
@@ -71,6 +71,7 @@
 
         /* Input Screen Styling */
         #input-screen {
+            display: block;
             text-align: center;
             padding: 20px;
         }
@@ -137,59 +138,88 @@
     </style>
 </head>
 <body>
-    <h1>Grid Formation Tool</h1>
+    <h1>Defile Formations</h1>
     <div class="container">
-        <!-- Password Screen -->
-        <div id="password-screen">
-            <h2>Enter Password</h2>
-            <input type="password" id="password" placeholder="Enter Password">
-            <button onclick="validatePassword()">Enter</button>
-            <p id="error-message" style="color: red;"></p>
-        </div>
-
-        <!-- Input Screen -->
         <div id="input-screen">
-            <h2>Enter Cohort Numbers</h2>
-            <form id="cohort-form">
-                <label for="PPP">PPP</label>
-                <input type="number" id="PPP" placeholder="Enter PPP size">
-
-                <label for="L1">L1</label>
-                <input type="number" id="L1" placeholder="Enter L1 size">
-
-                <label for="CC">CC</label>
-                <input type="number" id="CC" placeholder="Enter CC size">
-
-                <label for="L2">L2</label>
-                <input type="number" id="L2" placeholder="Enter L2 size">
-
-                <label for="L3">L3</label>
-                <input type="number" id="L3" placeholder="Enter L3 size">
-
-                <label for="L4">L4</label>
-                <input type="number" id="L4" placeholder="Enter L4 size">
-
-                <label for="L5">L5</label>
-                <input type="number" id="L5" placeholder="Enter L5 size">
-
-                <label for="L6">L6</label>
-                <input type="number" id="L6" placeholder="Enter L6 size">
-
-                <button type="button" onclick="generateFormation()">Generate Grid</button>
+            <form onsubmit="generateFormation(event); return false;">
+                <label for="PPP">PPP:</label>
+                <input type="number" id="PPP" placeholder="Enter PPP count" required>
+                <label for="L1">L1:</label>
+                <input type="number" id="L1" placeholder="Enter L1 count" required>
+                <label for="CC">CC:</label>
+                <input type="number" id="CC" placeholder="Enter CC count" required>
+                <label for="L2">L2:</label>
+                <input type="number" id="L2" placeholder="Enter L2 count" required>
+                <label for="L3">L3:</label>
+                <input type="number" id="L3" placeholder="Enter L3 count" required>
+                <label for="L4">L4:</label>
+                <input type="number" id="L4" placeholder="Enter L4 count" required>
+                <label for="L5">L5:</label>
+                <input type="number" id="L5" placeholder="Enter L5 count" required>
+                <label for="L6">L6:</label>
+                <input type="number" id="L6" placeholder="Enter L6 count" required>
+                <button type="submit">Generate Grid</button>
             </form>
         </div>
-
-        <!-- Grid Screen -->
         <div id="grid-screen">
-            <h2>Generated Grid</h2>
             <div id="grid-output"></div>
             <button onclick="location.reload()">Restart</button>
         </div>
     </div>
-
     <script>
-        /* Include JavaScript from your provided code */
-        /* Ensure it matches */
+        function generateFormation(event) {
+            event.preventDefault();
+            
+            // Get user inputs for cohort sizes
+            const cohorts = {
+                PPP: parseInt(document.getElementById("PPP").value) || 0,
+                L1: parseInt(document.getElementById("L1").value) || 0,
+                CC: parseInt(document.getElementById("CC").value) || 0,
+                L2: parseInt(document.getElementById("L2").value) || 0,
+                L3: parseInt(document.getElementById("L3").value) || 0,
+                L4: parseInt(document.getElementById("L4").value) || 0,
+                L5: parseInt(document.getElementById("L5").value) || 0,
+                L6: parseInt(document.getElementById("L6").value) || 0,
+            };
+
+            const columns = 8;
+            const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
+            const rows = Math.ceil(totalPeople / columns);
+            const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
+
+            // Add cohorts logic here (adjusted from your previous script)
+            // ...
+
+            const colors = {
+                PPP: "yellow",
+                CC: "blue",
+                L1: "gray",
+                L2: "lightgray",
+                L3: "lightblue",
+                L4: "orange",
+                L5: "green",
+                L6: "tan",
+                EMPTY: "white",
+            };
+
+            const gridOutput = document.getElementById("grid-output");
+            let tableHTML = "<table>";
+
+            grid.forEach((row, rowIndex) => {
+                tableHTML += "<tr>";
+                row.forEach(cell => {
+                    tableHTML += `<td style="background-color: ${colors[cell]};">${cell}</td>`;
+                });
+                tableHTML += `<td>Line ${rowIndex + 1}</td>`;
+                tableHTML += "</tr>";
+            });
+
+            tableHTML += "</table>";
+            gridOutput.innerHTML = tableHTML;
+
+            document.getElementById("input-screen").style.display = "none";
+            document.getElementById("grid-screen").style.display = "block";
+        }
     </script>
 </body>
 </html>
