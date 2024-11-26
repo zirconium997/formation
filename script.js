@@ -29,54 +29,129 @@ function generateFormation() {
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
     const rows = Math.ceil(totalPeople / columns);
 
-    // Generate initial grid
+    // Generate an empty grid structure
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
-    let currentRow = 0;
-    let currentCol = 0;
 
-    function placeCohort(cohort, count) {
+    // Define the placement order with adjusted rules
+    const placementOrder = ["PPP", "L1", "L6", "L5", "CC", "L2", "L3", "L4"];
+
+    let personIdx = 0;
+
+    placementOrder.forEach((cohort) => {
+        const count = cohorts[cohort];
+
         for (let i = 0; i < count; i++) {
-            grid[currentRow][currentCol] = cohort;
-            currentCol++;
-            if (currentCol === columns) {
-                currentCol = 0;
-                currentRow++;
+            // Calculate the next available row and column
+            const row = Math.floor(personIdx / columns);
+            const col = personIdx % columns;
+
+            // Place the cohort in the grid
+            grid[row][col] = cohort;
+            personIdx++;
+        }
+    });
+
+    // Enforce L6 -> L5 continuity
+    ensureL6L5Continuity(grid, rows, columns);
+
+    // Display the updated grid
+    displayGrid(grid, rows, columns);
+}
+
+function ensureL6L5Continuity(grid, rows, columns) {
+    // Find the highest position of L6
+    let l6LastRow = -1;
+    let l6LastCol = -1;
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            if (grid[r][c] === "L6") {
+                l6LastRow = r;
+                l6LastCol = c;
             }
         }
     }
 
-    // Step 1: Place cohorts PPP, L1, CC, and L2-L3 normally
-    placeCohort("PPP", cohorts.PPP);
-    placeCohort("L1", cohorts.L1);
-    placeCohort("CC", cohorts.CC);
-    placeCohort("L2", cohorts.L2);
-    placeCohort("L3", cohorts.L3);
+    // If L6 exists, ensure L5 starts immediately after
+    if (l6LastRow !== -1 && l6LastCol !== -1) {
+        let l5StartIdx = l6LastRow * columns + l6LastCol + 1;
 
-    // Step 2: Handle L4 and L5 placement
-    if (cohorts.CC > 0) {
-        // Place L4 and L5 aligning with CC's highest row
-        placeCohort("L4", cohorts.L4);
-        placeCohort("L5", cohorts.L5);
-    } else {
-        // Flip the grid vertically to start L4/L5 placement after PPP
-        const flippedGrid = grid.filter((row) => row.some((cell) => cell === "PPP")).reverse();
-
-        // Determine the row to align with flipped PPP
-        currentRow = flippedGrid.length;
-        currentCol = 0;
-
-        // Extend grid if necessary
-        while (currentRow >= grid.length) {
-            grid.push(Array(columns).fill("EMPTY"));
+        // Find and reposition L5
+        let l5Queue = [];
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < columns; c++) {
+                if (grid[r][c] === "L5") {
+                    l5Queue.push([r, c]);
+                    grid[r][c] = "EMPTY";
+                }
+            }
         }
 
-        placeCohort("L4", cohorts.L4);
-        placeCohort("L5", cohorts.L5);
+        // Place L5 right after L6
+        for (let i = 0; i < l5Queue.length; i++) {
+            const row = Math.floor(l5StartIdx / columns);
+            const col = l5StartIdx % columns;
+
+            grid[row][col] = "L5";
+            l5StartIdx++;
+        }
     }
+}
 
-    // Step 3: Place L6 last
-    placeCohort("L6", cohorts.L6);
+function displayGrid(grid, rows, columns) {
+    const gridOutput = document.getElementById("grid-output");
+    gridOutput.innerHTML = ""; // Clear previous content
 
-    // Display the grid
-    displayGrid(grid, rows, columns);
+    const table = document.createElement("table");
+
+    grid.forEach((row) => {
+        const tr = document.createElement("tr");
+        row.forEach((cell) => {
+            const td = document.createElement("td");
+
+            td.textContent = cell;
+
+            // Add color coding
+            switch (cell) {
+                case "PPP":
+                    td.style.backgroundColor = "yellow";
+                    break;
+                case "L1":
+                    td.style.backgroundColor = "gray";
+                    break;
+                case "CC":
+                    td.style.backgroundColor = "blue";
+                    break;
+                case "L2":
+                    td.style.backgroundColor = "lightgray";
+                    break;
+                case "L3":
+                    td.style.backgroundColor = "lightblue";
+                    break;
+                case "L4":
+                    td.style.backgroundColor = "orange";
+                    break;
+                case "L5":
+                    td.style.backgroundColor = "green";
+                    break;
+                case "L6":
+                    td.style.backgroundColor = "tan";
+                    break;
+                case "EMPTY":
+                    td.style.backgroundColor = "white";
+                    break;
+                default:
+                    td.style.backgroundColor = "white";
+            }
+
+            tr.appendChild(td);
+        });
+        table.appendChild(tr);
+    });
+
+    gridOutput.appendChild(table);
+
+    // Switch to grid screen
+    document.getElementById("input-screen").style.display = "none";
+    document.getElementById("grid-screen").style.display = "block";
 }
