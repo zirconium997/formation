@@ -29,72 +29,69 @@ function generateFormation() {
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
     const rows = Math.ceil(totalPeople / columns);
 
-    // Generate an empty grid structure
+    // Create an empty grid
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Define the placement order with adjusted rules
+    // Placement rules order
     const placementOrder = ["PPP", "L1", "L6", "L5", "CC", "L2", "L3", "L4"];
 
     let personIdx = 0;
 
+    // Place each cohort in the defined order
     placementOrder.forEach((cohort) => {
         const count = cohorts[cohort];
 
         for (let i = 0; i < count; i++) {
-            // Calculate the next available row and column
             const row = Math.floor(personIdx / columns);
             const col = personIdx % columns;
 
-            // Place the cohort in the grid
             grid[row][col] = cohort;
             personIdx++;
         }
     });
 
-    // Enforce L6 -> L5 continuity
-    ensureL6L5Continuity(grid, rows, columns);
+    // Ensure L6 and L5 populations are contiguous
+    maintainL6L5Continuity(grid, rows, columns);
 
     // Display the updated grid
     displayGrid(grid, rows, columns);
 }
 
-function ensureL6L5Continuity(grid, rows, columns) {
-    // Find the highest position of L6
-    let l6LastRow = -1;
-    let l6LastCol = -1;
+function maintainL6L5Continuity(grid, rows, columns) {
+    let l6EndRow = -1;
+    let l6EndCol = -1;
 
+    // Locate the last L6 position
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++) {
             if (grid[r][c] === "L6") {
-                l6LastRow = r;
-                l6LastCol = c;
+                l6EndRow = r;
+                l6EndCol = c;
             }
         }
     }
 
-    // If L6 exists, ensure L5 starts immediately after
-    if (l6LastRow !== -1 && l6LastCol !== -1) {
-        let l5StartIdx = l6LastRow * columns + l6LastCol + 1;
-
-        // Find and reposition L5
+    // If L6 exists, reallocate L5 to follow L6 directly
+    if (l6EndRow !== -1 && l6EndCol !== -1) {
         let l5Queue = [];
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < columns; c++) {
                 if (grid[r][c] === "L5") {
                     l5Queue.push([r, c]);
-                    grid[r][c] = "EMPTY";
+                    grid[r][c] = "EMPTY"; // Temporarily clear L5
                 }
             }
         }
 
-        // Place L5 right after L6
-        for (let i = 0; i < l5Queue.length; i++) {
+        // Reallocate L5 starting right after the last L6 position
+        let l5StartIdx = l6EndRow * columns + l6EndCol + 1;
+        l5Queue.forEach(() => {
             const row = Math.floor(l5StartIdx / columns);
             const col = l5StartIdx % columns;
 
             grid[row][col] = "L5";
             l5StartIdx++;
-        }
+        });
     }
 }
 
