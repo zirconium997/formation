@@ -29,70 +29,23 @@ function generateFormation() {
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
     const rows = Math.ceil(totalPeople / columns);
 
-    // Create an empty grid
+    // Generate a grid structure
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
-
-    // Placement rules order
-    const placementOrder = ["PPP", "L1", "L6", "L5", "CC", "L2", "L3", "L4"];
-
+    let currentCohort = Object.keys(cohorts);
     let personIdx = 0;
 
-    // Place each cohort in the defined order
-    placementOrder.forEach((cohort) => {
-        const count = cohorts[cohort];
-
-        for (let i = 0; i < count; i++) {
+    // Place people in the grid
+    currentCohort.forEach((cohort) => {
+        for (let i = 0; i < cohorts[cohort]; i++) {
             const row = Math.floor(personIdx / columns);
             const col = personIdx % columns;
-
             grid[row][col] = cohort;
             personIdx++;
         }
     });
 
-    // Ensure L6 and L5 populations are contiguous
-    maintainL6L5Continuity(grid, rows, columns);
-
-    // Display the updated grid
+    // Display the grid
     displayGrid(grid, rows, columns);
-}
-
-function maintainL6L5Continuity(grid, rows, columns) {
-    let l6EndRow = -1;
-    let l6EndCol = -1;
-
-    // Locate the last L6 position
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-            if (grid[r][c] === "L6") {
-                l6EndRow = r;
-                l6EndCol = c;
-            }
-        }
-    }
-
-    // If L6 exists, reallocate L5 to follow L6 directly
-    if (l6EndRow !== -1 && l6EndCol !== -1) {
-        let l5Queue = [];
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < columns; c++) {
-                if (grid[r][c] === "L5") {
-                    l5Queue.push([r, c]);
-                    grid[r][c] = "EMPTY"; // Temporarily clear L5
-                }
-            }
-        }
-
-        // Reallocate L5 starting right after the last L6 position
-        let l5StartIdx = l6EndRow * columns + l6EndCol + 1;
-        l5Queue.forEach(() => {
-            const row = Math.floor(l5StartIdx / columns);
-            const col = l5StartIdx % columns;
-
-            grid[row][col] = "L5";
-            l5StartIdx++;
-        });
-    }
 }
 
 function displayGrid(grid, rows, columns) {
