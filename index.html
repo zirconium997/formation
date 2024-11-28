@@ -64,7 +64,8 @@
         // Password Validation
         const correctPassword = "yourPassword"; // Define correct password
 
-        document.getElementById("submit-password-btn").addEventListener("click", () => {
+        // Attach event listener to the submit button
+        document.getElementById("submit-password-btn").addEventListener("click", function() {
             const passwordInput = document.getElementById("password").value;
             const errorMessage = document.getElementById("error-message");
             
@@ -208,17 +209,14 @@
             // Adjust last PPP row
             for (let col = 0; col < columns; col++) {
                 if (grid[rows - 1][col] === "L4" || grid[rows - 1][col] === "L5") {
-                    for (let swapRow = pppStartRow; swapRow < Math.min(pppStartRow + 2, rows); swapRow++) {
-                        if (grid[swapRow][col] === "PPP") {
-                            [grid[swapRow][col], grid[rows - 1][col]] = [grid[rows - 1][col], "PPP"];
-                            break;
-                        }
+                    for (let swapRow = pppStartRow; swapRow < rows; swapRow++) {
+                        grid[swapRow][col] = "EMPTY";
                     }
+                    break;
                 }
             }
 
-            // Flip the grid vertically
-            grid = grid.reverse();
+            grid.reverse(); // Reverse the grid for display
 
             // Display the grid
             const gridOutput = document.getElementById("grid-output");
