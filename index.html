@@ -61,14 +61,15 @@
     </div>
 
     <script>
-        // Password Validation
-        const correctPassword = "yourPassword"; // Define correct password
+        // Correct password
+        const correctPassword = "DefileFormations"; 
 
         // Attach event listener to the submit button
         document.getElementById("submit-password-btn").addEventListener("click", function() {
-            const passwordInput = document.getElementById("password").value;
+            const passwordInput = document.getElementById("password").value.trim(); // Trim any leading/trailing spaces
             const errorMessage = document.getElementById("error-message");
             
+            // Compare the entered password with the correct password
             if (passwordInput === correctPassword) {
                 // Show input screen and hide password screen
                 document.getElementById("password-screen").style.display = "none";
