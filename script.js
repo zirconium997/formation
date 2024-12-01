@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("Document loaded");
+
     const submitButton = document.getElementById("submit-button");
     const generateButton = document.getElementById("generate-button");
 
@@ -8,15 +10,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // When the submit button is clicked (password validation)
-    submitButton.addEventListener("click", function(event) {
+    // Password screen: Submit button event
+    submitButton.addEventListener("click", function (event) {
         event.preventDefault();
         console.log("Password validation triggered");
         validatePassword();
     });
 
-    // When the generate grid button is clicked (for creating the formation)
-    generateButton.addEventListener("click", function(event) {
+    // Generate grid button event
+    generateButton.addEventListener("click", function (event) {
         event.preventDefault();
         console.log("Generate grid button clicked");
         generateFormation();
@@ -30,14 +32,17 @@ function validatePassword() {
     if (password === "DefileFormations") {
         document.getElementById("password-screen").style.display = "none";
         document.getElementById("input-screen").style.display = "block";
+        console.log("Password validated successfully");
     } else {
         errorMessage.textContent = "Incorrect password. Please try again.";
+        console.log("Password validation failed");
     }
 }
 
 function generateFormation() {
-    console.log("Generating formation...");
+    console.log("Generating grid formation...");
 
+    // Retrieve cohort sizes from input fields
     const cohorts = {
         PPP: parseInt(document.getElementById("PPP").value) || 0,
         L1: parseInt(document.getElementById("L1").value) || 0,
@@ -49,17 +54,16 @@ function generateFormation() {
         L6: parseInt(document.getElementById("L6").value) || 0,
     };
 
-    console.log("Cohorts: ", cohorts);
+    console.log("Cohort sizes: ", cohorts);
 
     const columns = 8;
-    const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
+    const totalPeople = Object.values(cohorts).reduce((sum, value) => sum + value, 0);
     const rows = Math.ceil(totalPeople / columns);
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
+    // Place PPP cohort
     const pppRows = Math.ceil(cohorts.PPP / columns);
     const pppStartRow = rows - pppRows;
-
-    // Place PPP cohort
     let remainingPPP = cohorts.PPP;
     for (let row = pppStartRow; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
@@ -80,7 +84,7 @@ function generateFormation() {
         }
     }
 
-    // Helper function to assign cohorts to specific columns
+    // Helper function to place cohorts in specified columns
     function assignCohort(cohort, count, col1, col2, stopRow) {
         for (let row = 0; row < stopRow; row++) {
             if (count <= 0) break;
@@ -96,7 +100,7 @@ function generateFormation() {
         return count;
     }
 
-    // Place primary cohorts
+    // Place cohorts in their respective columns
     cohorts.L1 = assignCohort("L1", cohorts.L1, 3, 4, rows);
     cohorts.L2 = assignCohort("L2", cohorts.L2, 2, 5, rows);
     cohorts.L3 = assignCohort("L3", cohorts.L3, 1, 6, rows);
@@ -106,23 +110,12 @@ function generateFormation() {
     let remainingL5 = cohorts.L5;
     for (let row = 0; row < rows; row++) {
         if (remainingL5 <= 0) break;
-        if (row < ccRow && grid[row][0] === "EMPTY") {
+        if (grid[row][0] === "EMPTY") {
             grid[row][0] = "L5";
             remainingL5--;
         }
-        if (remainingL5 > 0 && row < ccRow && grid[row][7] === "EMPTY") {
+        if (grid[row][7] === "EMPTY") {
             grid[row][7] = "L5";
-            remainingL5--;
-        }
-    }
-    for (let row = 0; row < rows; row++) {
-        if (remainingL5 <= 0) break;
-        if (row < ccRow && grid[row][1] === "EMPTY") {
-            grid[row][1] = "L5";
-            remainingL5--;
-        }
-        if (remainingL5 > 0 && row < ccRow && grid[row][6] === "EMPTY") {
-            grid[row][6] = "L5";
             remainingL5--;
         }
     }
@@ -138,20 +131,11 @@ function generateFormation() {
             }
         }
     }
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < columns; col++) {
-            if (remainingL4 <= 0) break;
-            if (grid[row][col] === "EMPTY") {
-                grid[row][col] = "L4";
-                remainingL4--;
-            }
-        }
-    }
 
-    // Adjust last row of PPP
+    // Adjust the last row of PPP if needed
     for (let col = 0; col < columns; col++) {
         if (["L4", "L5"].includes(grid[rows - 1][col])) {
-            for (let swapRow = pppStartRow; swapRow < Math.min(pppStartRow + 2, rows); swapRow++) {
+            for (let swapRow = pppStartRow; swapRow < pppStartRow + 2; swapRow++) {
                 if (grid[swapRow][col] === "PPP") {
                     [grid[swapRow][col], grid[rows - 1][col]] = [grid[rows - 1][col], grid[swapRow][col]];
                     break;
@@ -160,17 +144,15 @@ function generateFormation() {
         }
     }
 
-    // Flip grid vertically
+    // Flip grid vertically and render it
     const flippedGrid = grid.reverse();
-
-    // Render grid
     renderGrid(flippedGrid);
 }
 
 function renderGrid(grid) {
     const gridOutput = document.getElementById("grid-output");
     if (!gridOutput) {
-        console.error("Grid output element not found. Please check the HTML.");
+        console.error("Grid output element not found");
         return;
     }
 
@@ -188,4 +170,5 @@ function renderGrid(grid) {
 
     document.getElementById("input-screen").style.display = "none";
     document.getElementById("grid-screen").style.display = "block";
+    console.log("Grid rendered successfully");
 }
