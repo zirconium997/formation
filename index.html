@@ -3,70 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cohort Formation</title>
+    <title>Grid Generator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: Calibri, sans-serif;
+            font-weight: bold;
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
         }
-        .hidden {
-            display: none;
+
+        .container {
+            text-align: center;
         }
+
+        .centered {
+            text-align: center;
+            margin: auto;
+        }
+
+        .green-button {
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .green-button:hover {
+            background-color: darkgreen;
+        }
+
         table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 20px 0;
+            margin: auto;
+            text-align: left;
+            width: 50%;
+            border-spacing: 10px;
         }
-        td {
-            border: 1px solid #000;
+
+        table td {
+            padding: 5px;
+        }
+
+        #grid-output td {
             text-align: center;
             padding: 10px;
-            font-weight: bold;
-            color: #fff;
+            width: 50px;
+            height: 50px;
         }
-        td.PPP { background-color: yellow; color: black; }
-        td.L1 { background-color: grey; }
-        td.CC { background-color: blue; }
-        td.L2 { background-color: lightgrey; color: black; }
-        td.L3 { background-color: lightblue; color: black; }
-        td.L4 { background-color: orange; }
-        td.L5 { background-color: green; }
-        td.L6 { background-color: tan; color: black; }
-        td.EMPTY { background-color: white; color: black; }
+
+        .PPP { background-color: yellow; }
+        .CC { background-color: darkblue; color: white; }
+        .L1 { background-color: grey; }
+        .L2 { background-color: lightgrey; }
+        .L3 { background-color: lightblue; }
+        .L4 { background-color: orange; }
+        .L5 { background-color: green; color: white; }
+        .L6 { background-color: tan; }
     </style>
 </head>
 <body>
-
-    <!-- Password Screen -->
-    <div id="password-screen">
-        <h2>Enter Password</h2>
-        <input type="password" id="password" placeholder="Password">
-        <button id="submit-button">Submit</button>
-        <p id="error-message" style="color: red;"></p>
+    <div id="password-screen" class="centered">
+        <div class="container">
+            <h1>Password Protected</h1>
+            <input type="password" id="password" placeholder="Enter password">
+            <button id="submit-button" class="green-button">ENTER</button>
+            <p id="error-message" style="color: red; font-weight: bold;"></p>
+        </div>
     </div>
 
-    <!-- Input Screen -->
-    <div id="input-screen" class="hidden">
-        <h2>Enter Cohort Sizes</h2>
-        <form>
-            <label>PPP: <input type="number" id="PPP" placeholder="23"></label><br>
-            <label>L1: <input type="number" id="L1" placeholder="13"></label><br>
-            <label>CC: <input type="number" id="CC" placeholder="7"></label><br>
-            <label>L2: <input type="number" id="L2" placeholder="10"></label><br>
-            <label>L3: <input type="number" id="L3" placeholder="12"></label><br>
-            <label>L4: <input type="number" id="L4" placeholder="25"></label><br>
-            <label>L5: <input type="number" id="L5" placeholder="14"></label><br>
-            <label>L6: <input type="number" id="L6" placeholder="16"></label><br>
-            <button id="generate-button">Generate Grid</button>
-        </form>
+    <div id="input-screen" style="display: none;" class="centered">
+        <div class="container">
+            <h1>Cohort Populations</h1>
+            <table>
+                <tr><td><label for="PPP">PPP:</label></td><td><input type="number" id="PPP" min="0"></td></tr>
+                <tr><td><label for="L1">L1:</label></td><td><input type="number" id="L1" min="0"></td></tr>
+                <tr><td><label for="CC">CC:</label></td><td><input type="number" id="CC" min="0"></td></tr>
+                <tr><td><label for="L2">L2:</label></td><td><input type="number" id="L2" min="0"></td></tr>
+                <tr><td><label for="L3">L3:</label></td><td><input type="number" id="L3" min="0"></td></tr>
+                <tr><td><label for="L4">L4:</label></td><td><input type="number" id="L4" min="0"></td></tr>
+                <tr><td><label for="L5">L5:</label></td><td><input type="number" id="L5" min="0"></td></tr>
+                <tr><td><label for="L6">L6:</label></td><td><input type="number" id="L6" min="0"></td></tr>
+            </table>
+            <button onclick="generateFormation()">Generate Formation</button>
+        </div>
     </div>
 
-    <!-- Grid Screen -->
-    <div id="grid-screen" class="hidden">
-        <h2>Generated Grid</h2>
-        <table id="grid-output"></table>
+    <div id="grid-screen" style="display: none;" class="centered">
+        <div class="container">
+            <h1>Generated Grid</h1>
+            <table id="grid-output" border="1" style="border-collapse: collapse;"></table>
+            <button onclick="location.reload()">Reset</button>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const submitButton = document.getElementById("submit-button");
+            submitButton.addEventListener("click", function(event) {
+                event.preventDefault();
+                validatePassword();
+            });
+        });
+
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (password === "DefileFormations") {
+                document.getElementById("password-screen").style.display = "none";
+                document.getElementById("input-screen").style.display = "block";
+            } else {
+                errorMessage.textContent = "Incorrect password. Please try again.";
+            }
+        }
+
+        function generateFormation() {
+            const cohorts = {
+                PPP: parseInt(document.getElementById("PPP").value) || 0,
+                L1: parseInt(document.getElementById("L1").value) || 0,
+                CC: parseInt(document.getElementById("CC").value) || 0,
+                L2: parseInt(document.getElementById("L2").value) || 0,
+                L3: parseInt(document.getElementById("L3").value) || 0,
+                L4: parseInt(document.getElementById("L4").value) || 0,
+                L5: parseInt(document.getElementById("L5").value) || 0,
+                L6: parseInt(document.getElementById("L6").value) || 0,
+            };
+
+            const columns = 8;
+            const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
+            const rows = Math.ceil(totalPeople / columns);
+            const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
+
+            // Insert translation of Python rules here as JavaScript...
+        }
+    </script>
 </body>
 </html>
+
