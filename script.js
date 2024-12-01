@@ -22,8 +22,8 @@ function validatePassword() {
     const errorMessage = document.getElementById("error-message");
 
     if (password === "DefileFormations") {
-        document.getElementById("password-screen").style.display = "none";
-        document.getElementById("input-screen").style.display = "block";
+        document.getElementById("password-screen").classList.add("hidden");
+        document.getElementById("input-screen").classList.remove("hidden");
         console.log("Password validated successfully.");
     } else {
         errorMessage.textContent = "Incorrect password. Please try again.";
@@ -51,9 +51,9 @@ function generateFormation() {
     const rows = Math.ceil(totalPeople / columns);
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Place PPP cohort
-    const pppRows = Math.ceil(cohorts.PPP / columns);
-    const pppStartRow = rows - pppRows;
+    // Place PPP
+    let pppRows = Math.ceil(cohorts.PPP / columns);
+    let pppStartRow = rows - pppRows;
     let remainingPPP = cohorts.PPP;
     for (let row = pppStartRow; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
@@ -64,9 +64,9 @@ function generateFormation() {
         }
     }
 
-    // Place CC cohort
+    // Place CC
     let remainingCC = cohorts.CC;
-    const ccRow = pppStartRow - 1;
+    let ccRow = pppStartRow - 1;
     for (let col = 0; col < columns; col++) {
         if (remainingCC > 0) {
             grid[ccRow][col] = "CC";
@@ -90,96 +90,46 @@ function generateFormation() {
         return count;
     }
 
-    // Place other cohorts
+    // Assign primary cohorts
     cohorts.L1 = assignCohort("L1", cohorts.L1, 3, 4, rows);
     cohorts.L2 = assignCohort("L2", cohorts.L2, 2, 5, rows);
     cohorts.L3 = assignCohort("L3", cohorts.L3, 1, 6, rows);
     cohorts.L6 = assignCohort("L6", cohorts.L6, 0, 7, rows);
 
-    // Place L5 cohort
-    let remainingL5 = cohorts.L5;
-    for (let row = 0; row < rows; row++) {
-        if (remainingL5 <= 0) break;
-        if (grid[row][0] === "EMPTY") {
-            grid[row][0] = "L5";
-            remainingL5--;
-        }
-        if (grid[row][7] === "EMPTY") {
-            grid[row][7] = "L5";
-            remainingL5--;
-        }
-    }
+    // Place L5 and L4
+    placeCohorts(grid, cohorts.L5, "L5", [0, 7], ccRow);
+    placeCohorts(grid, cohorts.L4, "L4", [1, 2, 3, 4, 5, 6], rows);
 
-    // Place L4 cohort
-    let remainingL4 = cohorts.L4;
-    for (let row = 0; row < rows; row++) {
-        for (let col = 1; col < columns - 1; col++) {
-            if (remainingL4 <= 0) break;
+    renderGrid(grid.reverse());
+}
+
+function placeCohorts(grid, count, cohort, columns, stopRow) {
+    for (let row = 0; row < stopRow; row++) {
+        for (let col of columns) {
+            if (count <= 0) return;
             if (grid[row][col] === "EMPTY") {
-                grid[row][col] = "L4";
-                remainingL4--;
+                grid[row][col] = cohort;
+                count--;
             }
         }
     }
-
-    // Adjust PPP individuals if necessary
-    for (let col = 0; col < columns; col++) {
-        if (["L4", "L5"].includes(grid[rows - 1][col])) {
-            for (let swapRow = pppStartRow; swapRow < pppStartRow + 2; swapRow++) {
-                if (grid[swapRow][col] === "PPP") {
-                    [grid[swapRow][col], grid[rows - 1][col]] = [grid[rows - 1][col], grid[swapRow][col]];
-                    break;
-                }
-            }
-        }
-    }
-
-    // Flip the grid vertically
-    const flippedGrid = grid.reverse();
-
-    // Render the grid
-    renderGrid(flippedGrid);
 }
 
 function renderGrid(grid) {
     const gridOutput = document.getElementById("grid-output");
-    if (!gridOutput) {
-        console.error("Grid output element not found.");
-        return;
-    }
-
-    // Clear previous grid
     gridOutput.innerHTML = "";
 
-    // Create the table with color-coded cells
     grid.forEach(row => {
         const tr = document.createElement("tr");
         row.forEach(cell => {
             const td = document.createElement("td");
             td.textContent = cell;
-            td.style.backgroundColor = getColorForCohort(cell);
+            td.className = cell;
             tr.appendChild(td);
         });
         gridOutput.appendChild(tr);
     });
 
-    document.getElementById("input-screen").style.display = "none";
-    document.getElementById("grid-screen").style.display = "block";
-    console.log("Grid rendered successfully.");
-}
-
-// Color codes for cohorts
-function getColorForCohort(cohort) {
-    const colors = {
-        PPP: "#FFD700", // Gold
-        CC: "#00BFFF", // DeepSkyBlue
-        L1: "#FF4500", // OrangeRed
-        L2: "#32CD32", // LimeGreen
-        L3: "#4B0082", // Indigo
-        L4: "#8A2BE2", // BlueViolet
-        L5: "#FF69B4", // HotPink
-        L6: "#4682B4", // SteelBlue
-        EMPTY: "#FFFFFF", // White
-    };
-    return colors[cohort] || "#FFFFFF";
+    document.getElementById("input-screen").classList.add("hidden");
+    document.getElementById("grid-screen").classList.remove("hidden");
 }
