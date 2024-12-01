@@ -1,8 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
     const submitButton = document.getElementById("submit-button");
+    const generateButton = document.getElementById("generate-button");
+
+    // When the submit button is clicked (password validation)
     submitButton.addEventListener("click", function(event) {
         event.preventDefault();
         validatePassword();
+    });
+
+    // When the generate grid button is clicked (for creating the formation)
+    generateButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        generateFormation();
     });
 });
 
