@@ -138,7 +138,10 @@
             const submitButton = document.getElementById("submit-button");
 
             // Attach the click event to validate the password
-            submitButton.addEventListener("click", validatePassword);
+            submitButton.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent default button behavior
+                validatePassword();
+            });
         });
 
         function validatePassword() {
