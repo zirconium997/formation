@@ -5,97 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grid Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Calibri, sans-serif;
-            font-weight: bold;
-            font-size: 20px;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 20px;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #password-screen button {
-            background-color: green;
-            color: white;
-        }
-
-        #input-screen, #grid-screen {
-            display: none;
-        }
-
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-        }
-
-        td, th {
-            border: 1px solid black;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .PPP { background-color: yellow; }
-        .CC { background-color: darkblue; color: white; }
-        .L1 { background-color: grey; color: white; }
-        .L2 { background-color: lightgrey; }
-        .L3 { background-color: lightblue; }
-        .L4 { background-color: orange; color: white; }
-        .L5 { background-color: green; color: white; }
-        .L6 { background-color: tan; }
-    </style>
 </head>
 <body>
     <!-- Password Entry Screen -->
-    <div id="password-screen">
+    <div id="password-screen" class="centered">
         <div class="container">
             <h1>Password Protected</h1>
             <input type="password" id="password" placeholder="Enter password">
-            <button onclick="validatePassword()">ENTER</button>
-            <p id="error-message" style="color: red;"></p>
+            <button onclick="validatePassword()" class="green-button">SUBMIT</button>
+            <p id="error-message" style="color: red; font-weight: bold;"></p>
         </div>
     </div>
 
     <!-- Cohort Population Entry Screen -->
-    <div id="input-screen">
+    <div id="input-screen" style="display: none;" class="centered">
         <div class="container">
             <h1>Cohort Populations</h1>
             <table>
-                <tr><td>PPP</td><td><input type="number" id="PPP" min="0" value="0"></td></tr>
-                <tr><td>L1</td><td><input type="number" id="L1" min="0" value="0"></td></tr>
-                <tr><td>CC</td><td><input type="number" id="CC" min="0" value="0"></td></tr>
-                <tr><td>L2</td><td><input type="number" id="L2" min="0" value="0"></td></tr>
-                <tr><td>L3</td><td><input type="number" id="L3" min="0" value="0"></td></tr>
-                <tr><td>L4</td><td><input type="number" id="L4" min="0" value="0"></td></tr>
-                <tr><td>L5</td><td><input type="number" id="L5" min="0" value="0"></td></tr>
-                <tr><td>L6</td><td><input type="number" id="L6" min="0" value="0"></td></tr>
+                <tr>
+                    <td><label for="PPP">PPP:</label></td>
+                    <td><input type="number" id="PPP" min="0"></td>
+                </tr>
+                <tr>
+                    <td><label for="L1">L1:</label></td>
+                    <td><input type="number" id="L1" min="0"></td>
+                </tr>
+                <tr>
+                    <td><label for="CC">CC:</label></td>
+                    <td><input type="number" id="CC" min="0"></td>
+                </tr>
+                <tr>
+                    <td><label for="L2">L2:</label></td>
+                    <td><input type="number" id="L2" min="0"></td>
+                </tr>
+                <tr>
+                    <td><label for="L3">L3:</label></td>
+                    <td><input type="number" id="L3" min="0"></td>
+                </tr>
+                <tr>
+                    <td><label for="L4">L4:</label></td>
+                    <td><input type="number" id="L4" min="0"></td>
+                </tr>
+                <tr>
+                    <td><label for="L5">L5:</label></td>
+                    <td><input type="number" id="L5" min="0"></td>
+                </tr>
+                <tr>
+                    <td><label for="L6">L6:</label></td>
+                    <td><input type="number" id="L6" min="0"></td>
+                </tr>
             </table>
             <button onclick="generateFormation()">Generate Formation</button>
         </div>
     </div>
 
     <!-- Generated Grid Display Screen -->
-    <div id="grid-screen">
+    <div id="grid-screen" style="display: none;" class="centered">
         <div class="container">
             <h1>Generated Grid</h1>
-            <table id="grid-output"></table>
+            <table id="grid-output" border="1" style="border-collapse: collapse;"></table>
             <button onclick="location.reload()">Reset</button>
         </div>
     </div>
