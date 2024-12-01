@@ -43,16 +43,15 @@ function generateFormation() {
     const totalPeople = Object.values(cohorts).reduce((sum, num) => sum + num, 0);
     const rows = Math.ceil(totalPeople / columns);
     const totalCells = rows * columns;
-    const initialGaps = totalCells - totalPeople;
 
+    // Create grid
     let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Determine the row count for PPP cohort
+    // Calculate PPP placement
     const pppRows = Math.ceil(cohorts["PPP"] / columns);
     const pppStartRow = rows - pppRows;
-
-    // Place PPP cohort
     let remainingPPP = cohorts["PPP"];
+
     for (let row = pppStartRow; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
             if (remainingPPP > 0) {
@@ -62,9 +61,9 @@ function generateFormation() {
         }
     }
 
-    // Place CC cohort in the row directly above PPP
-    let remainingCC = cohorts["CC"];
+    // Place CC above PPP
     const ccRow = pppStartRow - 1;
+    let remainingCC = cohorts["CC"];
     for (let col = 0; col < columns; col++) {
         if (remainingCC > 0) {
             grid[ccRow][col] = "CC";
@@ -72,7 +71,7 @@ function generateFormation() {
         }
     }
 
-    // Function to assign cohorts to specific columns, respecting existing placements
+    // Function to assign cohorts to specific columns
     function assignCohort(cohort, count, col1, col2, stopRow) {
         for (let row = 0; row < stopRow; row++) {
             if (count <= 0) break;
@@ -88,13 +87,13 @@ function generateFormation() {
         return count;
     }
 
-    // Place primary cohorts
-    cohorts["L1"] = assignCohort("L1", cohorts["L1"], 3, 4, rows);
-    cohorts["L2"] = assignCohort("L2", cohorts["L2"], 2, 5, rows);
-    cohorts["L3"] = assignCohort("L3", cohorts["L3"], 1, 6, rows);
-    cohorts["L6"] = assignCohort("L6", cohorts["L6"], 0, 7, rows);
+    // Assign cohorts based on rules
+    cohorts["L1"] = assignCohort("L1", cohorts["L1"], 3, 4, ccRow);
+    cohorts["L2"] = assignCohort("L2", cohorts["L2"], 2, 5, ccRow);
+    cohorts["L3"] = assignCohort("L3", cohorts["L3"], 1, 6, ccRow);
+    cohorts["L6"] = assignCohort("L6", cohorts["L6"], 0, 7, ccRow);
 
-    // Place L5 directly after L6 in columns 1 and 8
+    // Place L5 after L6
     let remainingL5 = cohorts["L5"];
     for (let row = 0; row < ccRow; row++) {
         if (remainingL5 <= 0) break;
@@ -108,7 +107,7 @@ function generateFormation() {
         }
     }
 
-    // Place remaining L5 in columns 2 and 7 if needed
+    // Fill remaining L5 in columns 2 and 7
     for (let row = 0; row < ccRow; row++) {
         if (remainingL5 <= 0) break;
         if (grid[row][1] === "EMPTY") {
@@ -121,7 +120,7 @@ function generateFormation() {
         }
     }
 
-    // Place initial L4 in remaining empty slots
+    // Place L4 in remaining slots
     let remainingL4 = cohorts["L4"];
     for (let row = 0; row < rows; row++) {
         for (let col = 1; col < columns - 1; col++) {
@@ -133,7 +132,7 @@ function generateFormation() {
         }
     }
 
-    // Secondary placement for any remaining L4 individuals
+    // Secondary L4 placement
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
             if (remainingL4 <= 0) break;
@@ -144,7 +143,7 @@ function generateFormation() {
         }
     }
 
-    // Flip the grid vertically
+    // Flip the grid
     grid = grid.reverse();
 
     renderGrid(grid);
@@ -158,7 +157,7 @@ function renderGrid(grid) {
         row.forEach(cell => {
             const cellDiv = document.createElement("div");
             cellDiv.className = `cell ${cell}`;
-            cellDiv.textContent = cell !== "EMPTY" ? cell : ""; // Add label only if not empty
+            cellDiv.textContent = cell !== "EMPTY" ? cell : "";
             gridOutput.appendChild(cellDiv);
         });
     });
