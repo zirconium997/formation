@@ -2,15 +2,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const submitButton = document.getElementById("submit-button");
     const generateButton = document.getElementById("generate-button");
 
+    // Check if buttons exist
+    if (!submitButton || !generateButton) {
+        console.error("Buttons not found in the HTML. Please check the button IDs.");
+        return;
+    }
+
     // When the submit button is clicked (password validation)
     submitButton.addEventListener("click", function(event) {
         event.preventDefault();
+        console.log("Password validation triggered");
         validatePassword();
     });
 
     // When the generate grid button is clicked (for creating the formation)
     generateButton.addEventListener("click", function(event) {
         event.preventDefault();
+        console.log("Generate grid button clicked");
         generateFormation();
     });
 });
@@ -28,6 +36,8 @@ function validatePassword() {
 }
 
 function generateFormation() {
+    console.log("Generating formation...");
+
     const cohorts = {
         PPP: parseInt(document.getElementById("PPP").value) || 0,
         L1: parseInt(document.getElementById("L1").value) || 0,
@@ -38,6 +48,8 @@ function generateFormation() {
         L5: parseInt(document.getElementById("L5").value) || 0,
         L6: parseInt(document.getElementById("L6").value) || 0,
     };
+
+    console.log("Cohorts: ", cohorts);
 
     const columns = 8;
     const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
@@ -157,6 +169,11 @@ function generateFormation() {
 
 function renderGrid(grid) {
     const gridOutput = document.getElementById("grid-output");
+    if (!gridOutput) {
+        console.error("Grid output element not found. Please check the HTML.");
+        return;
+    }
+
     gridOutput.innerHTML = "";
     grid.forEach(row => {
         const tr = document.createElement("tr");
@@ -168,6 +185,7 @@ function renderGrid(grid) {
         });
         gridOutput.appendChild(tr);
     });
+
     document.getElementById("input-screen").style.display = "none";
     document.getElementById("grid-screen").style.display = "block";
 }
