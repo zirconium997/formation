@@ -28,9 +28,6 @@ function validatePassword() {
 }
 
 function generateFormation() {
-    console.log("Generating grid formation...");
-
-    // Cohort data from input fields
     const cohorts = {
         PPP: parseInt(document.getElementById("PPP").value) || 0,
         L1: parseInt(document.getElementById("L1").value) || 0,
@@ -43,14 +40,19 @@ function generateFormation() {
     };
 
     const columns = 8;
-    const totalPeople = Object.values(cohorts).reduce((sum, value) => sum + value, 0);
+    const totalPeople = Object.values(cohorts).reduce((sum, num) => sum + num, 0);
     const rows = Math.ceil(totalPeople / columns);
-    const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
+    const totalCells = rows * columns;
+    const initialGaps = totalCells - totalPeople;
+
+    let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
+
+    // Determine the row count for PPP cohort
+    const pppRows = Math.ceil(cohorts["PPP"] / columns);
+    const pppStartRow = rows - pppRows;
 
     // Place PPP cohort
-    const pppRows = Math.ceil(cohorts.PPP / columns);
-    const pppStartRow = rows - pppRows;
-    let remainingPPP = cohorts.PPP;
+    let remainingPPP = cohorts["PPP"];
     for (let row = pppStartRow; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
             if (remainingPPP > 0) {
@@ -60,8 +62,8 @@ function generateFormation() {
         }
     }
 
-    // Place CC cohort
-    let remainingCC = cohorts.CC;
+    // Place CC cohort in the row directly above PPP
+    let remainingCC = cohorts["CC"];
     const ccRow = pppStartRow - 1;
     for (let col = 0; col < columns; col++) {
         if (remainingCC > 0) {
@@ -70,7 +72,7 @@ function generateFormation() {
         }
     }
 
-    // Helper function to assign cohorts
+    // Function to assign cohorts to specific columns, respecting existing placements
     function assignCohort(cohort, count, col1, col2, stopRow) {
         for (let row = 0; row < stopRow; row++) {
             if (count <= 0) break;
@@ -86,28 +88,41 @@ function generateFormation() {
         return count;
     }
 
-    // Place other cohorts
-    cohorts.L1 = assignCohort("L1", cohorts.L1, 3, 4, rows);
-    cohorts.L2 = assignCohort("L2", cohorts.L2, 2, 5, rows);
-    cohorts.L3 = assignCohort("L3", cohorts.L3, 1, 6, rows);
-    cohorts.L6 = assignCohort("L6", cohorts.L6, 0, 7, rows);
+    // Place primary cohorts
+    cohorts["L1"] = assignCohort("L1", cohorts["L1"], 3, 4, rows);
+    cohorts["L2"] = assignCohort("L2", cohorts["L2"], 2, 5, rows);
+    cohorts["L3"] = assignCohort("L3", cohorts["L3"], 1, 6, rows);
+    cohorts["L6"] = assignCohort("L6", cohorts["L6"], 0, 7, rows);
 
-    // Place L5 cohort
-    let remainingL5 = cohorts.L5;
-    for (let row = 0; row < rows; row++) {
+    // Place L5 directly after L6 in columns 1 and 8
+    let remainingL5 = cohorts["L5"];
+    for (let row = 0; row < ccRow; row++) {
         if (remainingL5 <= 0) break;
         if (grid[row][0] === "EMPTY") {
             grid[row][0] = "L5";
             remainingL5--;
         }
-        if (grid[row][7] === "EMPTY") {
+        if (remainingL5 > 0 && grid[row][7] === "EMPTY") {
             grid[row][7] = "L5";
             remainingL5--;
         }
     }
 
-    // Place L4 cohort
-    let remainingL4 = cohorts.L4;
+    // Place remaining L5 in columns 2 and 7 if needed
+    for (let row = 0; row < ccRow; row++) {
+        if (remainingL5 <= 0) break;
+        if (grid[row][1] === "EMPTY") {
+            grid[row][1] = "L5";
+            remainingL5--;
+        }
+        if (remainingL5 > 0 && grid[row][6] === "EMPTY") {
+            grid[row][6] = "L5";
+            remainingL5--;
+        }
+    }
+
+    // Place initial L4 in remaining empty slots
+    let remainingL4 = cohorts["L4"];
     for (let row = 0; row < rows; row++) {
         for (let col = 1; col < columns - 1; col++) {
             if (remainingL4 <= 0) break;
@@ -118,48 +133,34 @@ function generateFormation() {
         }
     }
 
-    // Adjust PPP individuals if necessary
-    for (let col = 0; col < columns; col++) {
-        if (["L4", "L5"].includes(grid[rows - 1][col])) {
-            for (let swapRow = pppStartRow; swapRow < pppStartRow + 2; swapRow++) {
-                if (grid[swapRow][col] === "PPP") {
-                    [grid[swapRow][col], grid[rows - 1][col]] = [grid[rows - 1][col], grid[swapRow][col]];
-                    break;
-                }
+    // Secondary placement for any remaining L4 individuals
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < columns; col++) {
+            if (remainingL4 <= 0) break;
+            if (grid[row][col] === "EMPTY") {
+                grid[row][col] = "L4";
+                remainingL4--;
             }
         }
     }
 
     // Flip the grid vertically
-    const flippedGrid = grid.reverse();
+    grid = grid.reverse();
 
-    // Render the grid
-    renderGrid(flippedGrid);
+    renderGrid(grid);
 }
 
 function renderGrid(grid) {
     const gridOutput = document.getElementById("grid-output");
-    if (!gridOutput) {
-        console.error("Grid output element not found.");
-        return;
-    }
+    gridOutput.innerHTML = ""; // Clear previous grid
 
-    // Clear previous grid
-    gridOutput.innerHTML = "";
-
-    // Create the table with color-coded cells
     grid.forEach(row => {
-        const tr = document.createElement("tr");
         row.forEach(cell => {
-            const td = document.createElement("td");
-            td.textContent = cell;
-            td.style.backgroundColor = getColorForCohort(cell);
-            td.style.border = "1px solid black";
-            td.style.padding = "10px";
-            td.style.textAlign = "center";
-            tr.appendChild(td);
+            const cellDiv = document.createElement("div");
+            cellDiv.className = `cell ${cell}`;
+            cellDiv.textContent = cell !== "EMPTY" ? cell : ""; // Add label only if not empty
+            gridOutput.appendChild(cellDiv);
         });
-        gridOutput.appendChild(tr);
     });
 
     document.getElementById("input-screen").style.display = "none";
