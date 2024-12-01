@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Document loaded");
-
     const submitButton = document.getElementById("submit-button");
     const generateButton = document.getElementById("generate-button");
 
@@ -10,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
         validatePassword();
     });
 
-    // Generate grid on button click
+    // Generate grid
     generateButton.addEventListener("click", function (event) {
         event.preventDefault();
         generateFormation();
@@ -24,10 +22,8 @@ function validatePassword() {
     if (password === "DefileFormations") {
         document.getElementById("password-screen").style.display = "none";
         document.getElementById("input-screen").style.display = "block";
-        console.log("Password validated successfully.");
     } else {
         errorMessage.textContent = "Incorrect password. Please try again.";
-        console.log("Password validation failed.");
     }
 }
 
