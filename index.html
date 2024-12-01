@@ -43,14 +43,34 @@
 
         table {
             margin: auto;
+            text-align: left;
+            border-spacing: 10px;
+        }
+
+        table td {
+            padding: 5px;
+        }
+
+        #grid-output {
+            display: grid;
+            margin: auto;
             border-collapse: collapse;
         }
 
         #grid-output td {
+            display: inline-block;
             text-align: center;
-            width: calc(100vh / 10); /* Ensures cells are square */
-            height: calc(100vh / 10);
+            vertical-align: middle;
             border: 1px solid black;
+            font-size: 16px;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+        }
+
+        #grid-output td.responsive-cell {
+            width: calc(100vw / 8);
+            height: calc(100vw / 8);
         }
 
         .PPP { background-color: yellow; }
@@ -61,6 +81,7 @@
         .L4 { background-color: orange; }
         .L5 { background-color: green; color: white; }
         .L6 { background-color: tan; }
+        .EMPTY { background-color: white; }
     </style>
 </head>
 <body>
@@ -96,11 +117,84 @@
     <div id="grid-screen" style="display: none;" class="centered">
         <div class="container">
             <h1>Generated Grid</h1>
-            <table id="grid-output"></table>
+            <table id="grid-output" border="1"></table>
             <button onclick="location.reload()">Reset</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const submitButton = document.getElementById("submit-button");
+            const generateButton = document.getElementById("generate-button");
+
+            // Validate password
+            submitButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                validatePassword();
+            });
+
+            // Generate grid
+            generateButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                generateFormation();
+            });
+        });
+
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (password === "DefileFormations") {
+                document.getElementById("password-screen").style.display = "none";
+                document.getElementById("input-screen").style.display = "block";
+            } else {
+                errorMessage.textContent = "Incorrect password. Please try again.";
+            }
+        }
+
+        function generateFormation() {
+            const cohorts = {
+                PPP: parseInt(document.getElementById("PPP").value) || 0,
+                L1: parseInt(document.getElementById("L1").value) || 0,
+                CC: parseInt(document.getElementById("CC").value) || 0,
+                L2: parseInt(document.getElementById("L2").value) || 0,
+                L3: parseInt(document.getElementById("L3").value) || 0,
+                L4: parseInt(document.getElementById("L4").value) || 0,
+                L5: parseInt(document.getElementById("L5").value) || 0,
+                L6: parseInt(document.getElementById("L6").value) || 0,
+            };
+
+            const totalPeople = Object.values(cohorts).reduce((sum, num) => sum + num, 0);
+            const columns = 8;
+            const rows = Math.ceil(totalPeople / columns);
+            const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
+
+            let currentIndex = 0;
+            Object.keys(cohorts).forEach(cohort => {
+                for (let i = 0; i < cohorts[cohort]; i++) {
+                    grid[Math.floor(currentIndex / columns)][currentIndex % columns] = cohort;
+                    currentIndex++;
+                }
+            });
+
+            renderGrid(grid);
+        }
+
+        function renderGrid(grid) {
+            const gridOutput = document.getElementById("grid-output");
+            gridOutput.innerHTML = "";
+
+            grid.forEach(row => {
+                row.forEach(cell => {
+                    const td = document.createElement("td");
+                    td.className = `responsive-cell ${cell}`;
+                    gridOutput.appendChild(td);
+                });
+            });
+
+            document.getElementById("input-screen").style.display = "none";
+            document.getElementById("grid-screen").style.display = "block";
+        }
+    </script>
 </body>
 </html>
