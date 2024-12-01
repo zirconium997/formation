@@ -54,28 +54,27 @@
         #grid-output {
             display: grid;
             margin: auto;
-            border-collapse: collapse;
+            grid-template-columns: repeat(8, 1fr);
+            grid-gap: 5px;
+            width: 100%;
+            max-width: 800px;
         }
 
-        #grid-output td {
-            display: inline-block;
-            text-align: center;
-            vertical-align: middle;
+        #grid-output .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border: 1px solid black;
             font-size: 16px;
             font-weight: bold;
-            width: 50px;
-            height: 50px;
-        }
-
-        #grid-output td.responsive-cell {
-            width: calc(100vw / 8);
-            height: calc(100vw / 8);
+            text-align: center;
+            width: 100%;
+            aspect-ratio: 1 / 1;
         }
 
         .PPP { background-color: yellow; }
         .CC { background-color: darkblue; color: white; }
-        .L1 { background-color: grey; }
+        .L1 { background-color: grey; color: white; }
         .L2 { background-color: lightgrey; }
         .L3 { background-color: lightblue; }
         .L4 { background-color: orange; }
@@ -117,8 +116,8 @@
     <div id="grid-screen" style="display: none;" class="centered">
         <div class="container">
             <h1>Generated Grid</h1>
-            <table id="grid-output" border="1"></table>
-            <button onclick="location.reload()">Reset</button>
+            <div id="grid-output"></div>
+            <button onclick="location.reload()" class="green-button">Reset</button>
         </div>
     </div>
 
@@ -127,7 +126,7 @@
             const submitButton = document.getElementById("submit-button");
             const generateButton = document.getElementById("generate-button");
 
-            // Validate password
+            // Password validation
             submitButton.addEventListener("click", function (event) {
                 event.preventDefault();
                 validatePassword();
@@ -182,13 +181,14 @@
 
         function renderGrid(grid) {
             const gridOutput = document.getElementById("grid-output");
-            gridOutput.innerHTML = "";
+            gridOutput.innerHTML = ""; // Clear previous grid
 
             grid.forEach(row => {
                 row.forEach(cell => {
-                    const td = document.createElement("td");
-                    td.className = `responsive-cell ${cell}`;
-                    gridOutput.appendChild(td);
+                    const cellDiv = document.createElement("div");
+                    cellDiv.className = `cell ${cell}`;
+                    cellDiv.textContent = cell !== "EMPTY" ? cell : ""; // Add label only if not empty
+                    gridOutput.appendChild(cellDiv);
                 });
             });
 
