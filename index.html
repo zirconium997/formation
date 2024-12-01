@@ -70,6 +70,7 @@
     </style>
 </head>
 <body>
+    <!-- Password Screen -->
     <div id="password-screen" class="centered">
         <div class="container">
             <h1>Password Protected</h1>
@@ -79,6 +80,7 @@
         </div>
     </div>
 
+    <!-- Input Screen -->
     <div id="input-screen" style="display: none;" class="centered">
         <div class="container">
             <h1>Cohort Populations</h1>
@@ -92,10 +94,11 @@
                 <tr><td><label for="L5">L5:</label></td><td><input type="number" id="L5" min="0"></td></tr>
                 <tr><td><label for="L6">L6:</label></td><td><input type="number" id="L6" min="0"></td></tr>
             </table>
-            <button onclick="generateFormation()">Generate Formation</button>
+            <button id="generate-button" class="green-button">Generate Formation</button>
         </div>
     </div>
 
+    <!-- Grid Output Screen -->
     <div id="grid-screen" style="display: none;" class="centered">
         <div class="container">
             <h1>Generated Grid</h1>
@@ -107,9 +110,18 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const submitButton = document.getElementById("submit-button");
-            submitButton.addEventListener("click", function(event) {
+            const generateButton = document.getElementById("generate-button");
+
+            // Validate password
+            submitButton.addEventListener("click", function (event) {
                 event.preventDefault();
                 validatePassword();
+            });
+
+            // Generate grid
+            generateButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                generateFormation();
             });
         });
 
@@ -137,14 +149,41 @@
                 L6: parseInt(document.getElementById("L6").value) || 0,
             };
 
+            const totalPeople = Object.values(cohorts).reduce((sum, num) => sum + num, 0);
             const columns = 8;
-            const totalPeople = Object.values(cohorts).reduce((a, b) => a + b, 0);
             const rows = Math.ceil(totalPeople / columns);
             const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-            // Insert translation of Python rules here as JavaScript...
+            // Place cohorts in grid
+            let currentIndex = 0;
+            Object.keys(cohorts).forEach(cohort => {
+                for (let i = 0; i < cohorts[cohort]; i++) {
+                    grid[Math.floor(currentIndex / columns)][currentIndex % columns] = cohort;
+                    currentIndex++;
+                }
+            });
+
+            renderGrid(grid);
+        }
+
+        function renderGrid(grid) {
+            const gridOutput = document.getElementById("grid-output");
+            gridOutput.innerHTML = "";
+
+            grid.forEach(row => {
+                const tr = document.createElement("tr");
+                row.forEach(cell => {
+                    const td = document.createElement("td");
+                    td.textContent = cell;
+                    td.className = cell; // Use class for color coding
+                    tr.appendChild(td);
+                });
+                gridOutput.appendChild(tr);
+            });
+
+            document.getElementById("input-screen").style.display = "none";
+            document.getElementById("grid-screen").style.display = "block";
         }
     </script>
 </body>
 </html>
-
