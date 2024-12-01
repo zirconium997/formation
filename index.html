@@ -69,5 +69,26 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const submitButton = document.getElementById("submit-button");
+
+        // Attach the click event to validate the password
+        submitButton.addEventListener("click", validatePassword);
+    });
+
+    function validatePassword() {
+        const password = document.getElementById("password").value;
+        const errorMessage = document.getElementById("error-message");
+
+        if (password === "DefileFormations") {
+            document.getElementById("password-screen").style.display = "none";
+            document.getElementById("input-screen").style.display = "block";
+        } else {
+            errorMessage.textContent = "Incorrect password. Please try again.";
+        }
+    }
+</script>
+
 </body>
 </html>
