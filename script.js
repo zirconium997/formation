@@ -1,6 +1,8 @@
-// Event listener to ensure proper loading of password button
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("submit-button").addEventListener("click", validatePassword);
+    const submitButton = document.getElementById("submit-button");
+
+    // Attach the click event to validate the password
+    submitButton.addEventListener("click", validatePassword);
 });
 
 function validatePassword() {
