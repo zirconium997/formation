@@ -1,156 +1,62 @@
-/* General Styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: Calibri, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    color: #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
 }
 
 .container {
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Table Styling for the Grid */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px auto;
     text-align: center;
-    font-size: 14px;
-    table-layout: fixed;
 }
 
-td {
+.centered {
+    text-align: center;
+    margin: auto;
+}
+
+.green-button {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.green-button:hover {
+    background-color: darkgreen;
+}
+
+table {
+    margin: auto;
+    text-align: left;
+    width: 50%;
+    border-spacing: 10px;
+}
+
+table td {
+    padding: 5px;
+}
+
+#grid-output td {
+    text-align: center;
+    padding: 10px;
     width: 50px;
     height: 50px;
-    border: 1px solid #ccc;
-    text-align: center;
-    vertical-align: middle;
-    font-weight: bold;
-    font-size: 14px;
 }
 
-/* Color Coding for Cohorts */
-td[style*="background-color: yellow"] {
-    color: #333; /* PPP */
-}
-
-td[style*="background-color: blue"] {
-    color: #fff; /* CC */
-}
-
-td[style*="background-color: orange"] {
-    color: #fff; /* L4 */
-}
-
-td[style*="background-color: green"] {
-    color: #fff; /* L5 */
-}
-
-td[style*="background-color: gray"] {
-    color: #fff; /* L1 */
-}
-
-td[style*="background-color: lightgray"] {
-    color: #333; /* L2 */
-}
-
-td[style*="background-color: lightblue"] {
-    color: #333; /* L3 */
-}
-
-td[style*="background-color: tan"] {
-    color: #333; /* L6 */
-}
-
-td[style*="background-color: white"] {
-    color: #333; /* EMPTY */
-}
-
-/* Line Number Styling */
-td:last-child {
-    font-size: 12px;
-    font-weight: normal;
-    color: #666;
-}
-
-/* Input Screen Styling */
-#input-screen {
-    display: block;
-    text-align: center;
-    padding: 20px;
-}
-
-#grid-screen {
-    display: none;
-    text-align: center;
-}
-
-/* Form Styling */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-form label {
-    font-size: 14px;
-    font-weight: bold;
-    text-align: left;
-    margin-bottom: 5px;
-}
-
-form input {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    td {
-        width: 40px;
-        height: 40px;
-        font-size: 12px;
-    }
-
-    form input {
-        font-size: 12px;
-    }
-
-    button {
-        font-size: 14px;
-    }
-}
+.PPP { background-color: yellow; }
+.CC { background-color: darkblue; color: white; }
+.L1 { background-color: grey; }
+.L2 { background-color: lightgrey; }
+.L3 { background-color: lightblue; }
+.L4 { background-color: orange; }
+.L5 { background-color: green; color: white; }
+.L6 { background-color: tan; }
