@@ -199,10 +199,9 @@ function getColorForCohort(cohort) {
         CC: "blue",
         L2: "lightgrey",
         L3: "lightblue",
-        L4: "orange",
+        L4: "purple",
         L5: "green",
-        L6: "tan",
-        EMPTY: "white",
+        L6: "orange"
     };
-    return colors[cohort] || "white";
+    return colors[cohort] || "white"; // Default to white if cohort not found
 }
