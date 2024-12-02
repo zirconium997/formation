@@ -2,13 +2,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const submitButton = document.getElementById("submit-button");
     const generateButton = document.getElementById("generate-button");
 
-    // Validate password
     submitButton.addEventListener("click", function (event) {
         event.preventDefault();
         validatePassword();
     });
 
-    // Generate grid
     generateButton.addEventListener("click", function (event) {
         event.preventDefault();
         generateFormation();
@@ -28,14 +26,13 @@ function validatePassword() {
 }
 
 function generateFormation() {
-    // Cohorts from user input (these can be dynamically adjusted)
     const cohorts = {
         L1: parseInt(document.getElementById("L1").value) || 0,
         L2: parseInt(document.getElementById("L2").value) || 0,
         L3: parseInt(document.getElementById("L3").value) || 0,
-        L6: parseInt(document.getElementById("L6").value) || 0,
-        L5: parseInt(document.getElementById("L5").value) || 0,
         L4: parseInt(document.getElementById("L4").value) || 0,
+        L5: parseInt(document.getElementById("L5").value) || 0,
+        L6: parseInt(document.getElementById("L6").value) || 0,
         CC: parseInt(document.getElementById("CC").value) || 0,
         PPP: parseInt(document.getElementById("PPP").value) || 0
     };
@@ -43,19 +40,21 @@ function generateFormation() {
     const columns = 8;
     const totalPeople = Object.values(cohorts).reduce((sum, num) => sum + num, 0);
     const rows = Math.ceil(totalPeople / columns);
-    const totalCells = rows * columns;
-    const initialGaps = totalCells - totalPeople;
+    const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Create empty grid
-    let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
-
-    // Calculate the row count for PPP cohort
-    const pppRows = Math.ceil(cohorts["PPP"] / columns);
-    const pppStartRow = rows - pppRows;  // Starting row for PPP
-
-    // Place PPP cohort from its start row
     let remainingPPP = cohorts["PPP"];
-    for (let row = pppStartRow; row < rows; row++) {
+    let remainingCC = cohorts["CC"];
+    let remainingL1 = cohorts["L1"];
+    let remainingL2 = cohorts["L2"];
+    let remainingL3 = cohorts["L3"];
+    let remainingL4 = cohorts["L4"];
+    let remainingL5 = cohorts["L5"];
+    let remainingL6 = cohorts["L6"];
+
+    // Place PPP cohort in the last rows
+    let pppRows = Math.ceil(remainingPPP / columns);
+    let startRow = rows - pppRows;
+    for (let row = startRow; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
             if (remainingPPP > 0) {
                 grid[row][col] = "PPP";
@@ -64,9 +63,8 @@ function generateFormation() {
         }
     }
 
-    // Place CC cohort in the row directly above PPP start row
-    let remainingCC = cohorts["CC"];
-    const ccRow = pppStartRow - 1;
+    // Place CC cohort just above PPP
+    let ccRow = startRow - 1;
     for (let col = 0; col < columns; col++) {
         if (remainingCC > 0) {
             grid[ccRow][col] = "CC";
@@ -74,109 +72,53 @@ function generateFormation() {
         }
     }
 
-    // Function to assign cohorts to specific columns, respecting existing placements
-    function assignCohort(cohort, count, col1, col2, stopRow) {
-        for (let row = 0; row < stopRow; row++) {
-            if (count <= 0) break;
-            if (grid[row][col1] === "EMPTY") {
+    // Function to place cohorts in columns 1 and 8, filling from top to bottom
+    function placeCohortsInColumns(cohort, remainingCount, col1, col2) {
+        for (let row = 0; row < rows; row++) {
+            if (remainingCount <= 0) break;
+            if (grid[row][col1] === "EMPTY" && remainingCount > 0) {
                 grid[row][col1] = cohort;
-                count--;
+                remainingCount--;
             }
-            if (count > 0 && grid[row][col2] === "EMPTY") {
+            if (grid[row][col2] === "EMPTY" && remainingCount > 0) {
                 grid[row][col2] = cohort;
-                count--;
+                remainingCount--;
             }
         }
-        return count;
+        return remainingCount;
     }
 
-    // Place primary cohorts in specific locations based on rules
-    cohorts["L1"] = assignCohort("L1", cohorts["L1"], 3, 4, rows);
-    cohorts["L2"] = assignCohort("L2", cohorts["L2"], 2, 5, rows);
-    cohorts["L3"] = assignCohort("L3", cohorts["L3"], 1, 6, rows);
-    cohorts["L6"] = assignCohort("L6", cohorts["L6"], 0, 7, rows);
+    // Place L1, L2, L3, L6 in the grid, filling columns 1 and 8 first
+    remainingL1 = placeCohortsInColumns("L1", remainingL1, 1, 8);
+    remainingL2 = placeCohortsInColumns("L2", remainingL2, 0, 7);
+    remainingL3 = placeCohortsInColumns("L3", remainingL3, 2, 5);
+    remainingL6 = placeCohortsInColumns("L6", remainingL6, 3, 4);
 
-    // Place L5 directly after L6 in columns 1 and 8, ensuring no excess placement
-    let remainingL5 = cohorts["L5"];
-    for (let row = 0; row < rows; row++) {
-        if (remainingL5 <= 0) break;
-        if (row < ccRow && grid[row][0] === "EMPTY") {
-            grid[row][0] = "L5";
-            remainingL5--;
-        }
-        if (remainingL5 > 0 && row < ccRow && grid[row][7] === "EMPTY") {
-            grid[row][7] = "L5";
-            remainingL5--;
-        }
-    }
+    // Place L5 directly after L6 in columns 1 and 8
+    remainingL5 = placeCohortsInColumns("L5", remainingL5, 1, 8);
 
-    // Place remaining L5 in columns 2 and 7 if needed
-    for (let row = 0; row < rows; row++) {
-        if (remainingL5 <= 0) break;
-        if (row < ccRow && grid[row][1] === "EMPTY") {
-            grid[row][1] = "L5";
-            remainingL5--;
-        }
-        if (remainingL5 > 0 && row < ccRow && grid[row][6] === "EMPTY") {
-            grid[row][6] = "L5";
-            remainingL5--;
-        }
-    }
-
-    // Initial placement of L4 in remaining empty slots, from lowest to highest rows
-    let remainingL4 = cohorts["L4"];
-    for (let row = 0; row < rows; row++) {
-        for (let col = 1; col < columns - 1; col++) {  // Avoid placing on column 1 and 8
-            if (remainingL4 <= 0) break;
-            if (grid[row][col] === "EMPTY") {
-                grid[row][col] = "L4";
-                remainingL4--;
-            }
-        }
-    }
-
-    // Secondary placement pass for any remaining L4 individuals, prioritizing remaining gaps
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < columns; col++) {
-            if (remainingL4 <= 0) break;
-            if (grid[row][col] === "EMPTY") {
-                grid[row][col] = "L4";
-                remainingL4--;
-            }
-        }
-    }
-
-    // Adjust individuals in the last row of PPP
-    for (let col = 0; col < columns; col++) {
-        if (grid[rows - 1][col] === "L4" || grid[rows - 1][col] === "L5") {
-            // Find a PPP individual in the first or second row of the PPP cohort to swap
-            let swapMade = false;
-            for (let swapRow = pppStartRow; swapRow < pppStartRow + Math.min(2, pppRows); swapRow++) {  // First two rows of PPP
-                if (grid[swapRow][col] === "PPP") {
-                    // Swap the individuals
-                    [grid[swapRow][col], grid[rows - 1][col]] = [grid[rows - 1][col], grid[swapRow][col]];
-                    swapMade = true;
-                    break;
+    // Fill remaining spaces for L4
+    function placeRemainingL4() {
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < columns; col++) {
+                if (remainingL4 <= 0) break;
+                if (grid[row][col] === "EMPTY" && remainingL4 > 0) {
+                    grid[row][col] = "L4";
+                    remainingL4--;
                 }
             }
-            if (!swapMade) {
-                console.warn(`Could not find a PPP individual to swap for column ${col}.`);
-            }
         }
     }
+    placeRemainingL4();
 
-    // Flip the grid vertically
-    grid = grid.reverse();
-
-    // Display grid with alignment and color coding
+    // Render the grid to the screen
     renderGrid(grid);
 }
 
 function renderGrid(grid) {
     const gridOutput = document.getElementById("grid-output");
-    gridOutput.innerHTML = "";  // Clear previous grid
+    gridOutput.innerHTML = "";
 
-    // Create the grid HTML structure
     grid.forEach(row => {
         row.forEach(cell => {
             const cellDiv = document.createElement("div");
