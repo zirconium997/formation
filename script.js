@@ -45,29 +45,85 @@ function generateFormation() {
     const grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
     // Placement logic
-    let rowTracker = 0;
+    // Define placement logic
+function createGrid(totalPeople, cohorts) {
+    const columns = 8; // Fixed number of columns
+    const rows = Math.ceil(totalPeople / columns); // Calculate required rows
+    let grid = Array.from({ length: rows }, () => Array(columns).fill("EMPTY"));
 
-    // Place L6 cohort in columns 1 and 8 from top to bottom
-    rowTracker = placeCohort(grid, "L6", cohorts["L6"], 0, columns, rowTracker, [0, 7]);
+    // Helper function to place individuals in specific columns
+    function placeInColumns(cohort, count, colIndices, startRow = 0) {
+        let row = startRow, placed = 0;
+        while (count > 0 && row < rows) {
+            for (let col of colIndices) {
+                if (count === 0) break;
+                if (grid[row][col] === "EMPTY") {
+                    grid[row][col] = cohort;
+                    count--;
+                    placed++;
+                }
+            }
+            row++;
+        }
+        return placed;
+    }
+
+    // Place L6 in columns 1 and 8
+    placeInColumns("L6", cohorts.L6 || 0, [0, 7]);
 
     // Place L5 directly after L6 in columns 1 and 8
-    rowTracker = placeCohort(grid, "L5", cohorts["L5"], rowTracker, columns, rowTracker, [0, 7]);
+    placeInColumns("L5", cohorts.L5 || 0, [0, 7]);
 
-    // Place CC cohort above PPP, filling the last row in order
-    rowTracker = placeCohort(grid, "CC", cohorts["CC"], rows - 2, columns, rowTracker, "fullRow");
+    // Place CC in the last two rows
+    placeInColumns("CC", cohorts.CC || 0, [...Array(columns).keys()], rows - 2);
 
-    // Place PPP cohort in the last rows
-    rowTracker = placeCohort(grid, "PPP", cohorts["PPP"], rows - 1, columns, rowTracker, "fullRow");
+    // Place PPP in the last row
+    placeInColumns("PPP", cohorts.PPP || 0, [...Array(columns).keys()], rows - 1);
 
-    // Fill L4 in the middle grid spaces
-    rowTracker = placeCohort(grid, "L4", cohorts["L4"], 0, columns, rowTracker, "middle");
+    // Fill L4 in the middle rows
+    const middleStartRow = Math.floor(rows / 2) - 1;
+    placeInColumns("L4", cohorts.L4 || 0, Array.from({ length: columns - 2 }, (_, i) => i + 1), middleStartRow);
 
-    // Remaining L1, L2, L3 placement
+    // Place remaining cohorts (L1, L2, L3)
     ["L1", "L2", "L3"].forEach(cohort => {
-        rowTracker = placeCohort(grid, cohort, cohorts[cohort], 0, columns, rowTracker, "remainder");
+        placeInColumns(cohort, cohorts[cohort] || 0, [...Array(columns).keys()]);
     });
 
-    renderGrid(grid);
+    return grid;
+}
+
+// Function to dynamically generate the grid layout
+function generateGridLayout() {
+    // Retrieve cohort populations from user inputs
+    const cohorts = {
+        L1: parseInt(document.getElementById("L1").value) || 0,
+        L2: parseInt(document.getElementById("L2").value) || 0,
+        L3: parseInt(document.getElementById("L3").value) || 0,
+        L4: parseInt(document.getElementById("L4").value) || 0,
+        L5: parseInt(document.getElementById("L5").value) || 0,
+        L6: parseInt(document.getElementById("L6").value) || 0,
+        CC: parseInt(document.getElementById("CC").value) || 0,
+        PPP: parseInt(document.getElementById("PPP").value) || 0
+    };
+
+    const totalPeople = Object.values(cohorts).reduce((sum, count) => sum + count, 0);
+    const grid = createGrid(totalPeople, cohorts);
+
+    // Render the grid to the results container
+    const resultsContainer = document.getElementById("results");
+    resultsContainer.innerHTML = ""; // Clear previous results
+
+    grid.forEach(row => {
+        const rowElement = document.createElement("div");
+        rowElement.className = "grid-row";
+        row.forEach(cell => {
+            const cellElement = document.createElement("div");
+            cellElement.className = `grid-cell ${cell.toLowerCase()}`; // Add class for styling
+            cellElement.textContent = cell; // Display cohort name
+            rowElement.appendChild(cellElement);
+        });
+        resultsContainer.appendChild(rowElement);
+    });
 }
 
 // Cohort placement helper function
